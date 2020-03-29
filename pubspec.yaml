@@ -1,0 +1,39 @@
+name: shopkart_frontend
+description: A new Flutter project.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  carousel_slider: ^1.4.1
+  shared_preferences: ^0.5.6+3
+  provider: ^4.0.4
+  http: ^0.12.0+4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+   - assets/images/
+
+  fonts:
+    - family: GoogleSans-Medium
+      fonts:
+        - asset: assets/fonts/GoogleSans-Medium.ttf
+    
+    - family: GoogleSans-Regular
+      fonts:
+        - asset: assets/fonts/GoogleSans-Regular.ttf
+    
+    - family: Sacramento
+      fonts:
+        - asset: assets/fonts/Sacramento-Regular.ttf
