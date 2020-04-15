@@ -28,25 +28,18 @@ const kTextFormStyle = TextStyle(
 );
 
 const kHintTextStyle = TextStyle(
-  // color: Colors.white,
   fontFamily: 'GoogleSans-Regular'
 );
 
 const kTextFieldDecoration = InputDecoration(
   filled: true,
   fillColor: Colors.white,
+  labelText: 'Enter a value',
   hintText: 'Enter a value',
   hintStyle: kHintTextStyle,
-  contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-  border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-  ),
-  enabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.blueAccent, width: 1.0),
-    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-  ),
-  focusedBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: Colors.blueAccent, width: 2.0),
-    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-  ),
+  border: OutlineInputBorder(),
 );
+
+
+final String apiUrl = 'https://shopkart-inc.herokuapp.com/';
+final String apiUserRegister = 'api/users/register';

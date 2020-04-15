@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -9,9 +10,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  GlobalKey<FormState> _key = new GlobalKey();
-  bool _validate = false;
+  final _formKey = GlobalKey<FormState>();
   String _email, _password;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +39,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(24.0),
                         child: Form(
-                          key: _key,
-                          autovalidate: _validate,
+                          key: _formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -50,40 +50,60 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  'Email',
-                                  style: kLabelTextStyle,
-                                ),
-                              ),
                               TextFormField(
                                 keyboardType: TextInputType.emailAddress,
-                                textAlign: TextAlign.center,
-                                onChanged: (value) {
+                                onSaved: (value) {
                                   _email = value;
                                 },
                                 decoration: kTextFieldDecoration.copyWith(
-                                    hintText: 'Enter your email'),
+                                  labelText: 'Email',
+                                  hintText: 'Enter your email',
+                                ),
+                                validator: (val) {
+                                  String pattern =
+                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                  RegExp regExp = new RegExp(pattern);
+                                  if (val.length == 0) {
+                                    return "Email is Required";
+                                  } else if (!regExp.hasMatch(val)) {
+                                    return "Invalid Email";
+                                  } else {
+                                    return null;
+                                  }
+                                },
                               ),
                               SizedBox(
                                 height: 12.0,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  'Password',
-                                  style: kLabelTextStyle,
-                                ),
-                              ),
                               TextFormField(
-                                obscureText: true,
-                                textAlign: TextAlign.center,
-                                onChanged: (value) {
+                                obscureText: _obscureText,
+                                onSaved: (value) {
                                   _password = value;
                                 },
-                                decoration: kTextFieldDecoration.copyWith(
-                                    hintText: 'Enter your password'),
+                                decoration: InputDecoration(
+                                  suffixIcon: GestureDetector(
+                                    child: Icon(
+                                      _obscureText
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onTap: () {
+                                      setState(() {
+                                        _obscureText = !_obscureText;
+                                      });
+                                    },
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
+                                  labelText: 'Password',
+                                  hintText: 'Enter your password',
+                                  hintStyle: kHintTextStyle,
+                                  border: OutlineInputBorder(),
+                                ),
+                                validator: (val) {
+                                  if (val.length >= 8) return null;
+                                  return 'Password must be of 8 characters!';
+                                },
                               ),
                               SizedBox(
                                 height: 24.0,
@@ -107,12 +127,14 @@ class _LoginPageState extends State<LoginPage> {
                           textColor: Colors.white,
                           buttonText: 'Log in',
                           onPressed: (){
-                            print(_password);
-                            print(_email);
-                            if (!_validate) {
-                              Navigator.pushNamed(context, '/HomePage');
-                            }
+                            _submit();
                           },
+                        ),
+                        FlatButton(
+                          onPressed: (){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                          },
+                          child: Text('New user? Register'),
                         ),
                       ],
                     ),
@@ -125,5 +147,11 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+  void _submit() {
+    final form = _formKey.currentState;
+    if(form.validate()){
+      form.save();
+    }
   }
 }

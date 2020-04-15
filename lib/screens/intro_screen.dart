@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shopkart_frontend/screens/login_screen.dart';
+import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/widgets/introscreen_carousel.dart';
 import 'dart:ui';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
@@ -45,8 +47,7 @@ class _IntroScreenState extends State<IntroScreen> {
                           buttonText: 'Sign in',
                           textColor: Colors.white,
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed('/LoginPage');
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                           },
                         ),
                       ),
@@ -57,8 +58,7 @@ class _IntroScreenState extends State<IntroScreen> {
                           buttonText: 'Register',
                           textColor: Color(0xFFFFFFFF),
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed('/RegisterPage');
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterPage()));
                           },
                         ),
                       ),

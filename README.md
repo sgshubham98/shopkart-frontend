@@ -1,4 +1,4 @@
-# shopkart_frontend
+# Shopkart
 
 A new Flutter project.
 
