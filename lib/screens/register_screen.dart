@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopkart_frontend/screens/login_screen.dart';
+import 'package:shopkart_frontend/screens/verification_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -253,21 +254,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 42.0, left: 42.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        _isSubmitting
+                        _isSubmitting == true
                             ? CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation(
                                   Color(0xFF1BBC9B),
                                 ),
                               )
-                            : SimpleRoundButton(
-                                backgroundColor: Color(0xFF1BBC9B),
-                                textColor: Colors.white,
-                                buttonText: 'Register',
-                                onPressed: () {
-                                  _submit();
-                                },
+                            : Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: SimpleRoundButton(
+                                      backgroundColor: Color(0xFF1BBC9B),
+                                      textColor: Colors.white,
+                                      buttonText: 'Register',
+                                      onPressed: () {
+                                        _submit();
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                         FlatButton(
                           onPressed: () {
@@ -314,11 +320,20 @@ class _RegisterPageState extends State<RegisterPage> {
       "role": _role,
     });
     final responseData = json.decode(response.body);
-    setState(() {
-      _isSubmitting = false;
-    });
-    _showSuccessSnack();
-    print(responseData);
+    if (response.statusCode == 200) {
+      setState(() {
+        _isSubmitting = false;
+      });
+      _showSuccessSnack();
+      _redirectUser();
+      print(responseData);
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
+      final String errorMsg = responseData['message'];
+      _showErrorSnackBar(errorMsg);
+    }
   }
 
   void _showSuccessSnack() {
@@ -334,5 +349,31 @@ class _RegisterPageState extends State<RegisterPage> {
     );
     _scaffoldKey.currentState.showSnackBar(snackBar);
     _formKey.currentState.reset();
+  }
+
+  void _showErrorSnackBar(String errorMsg){
+    final snackBar = SnackBar(
+      content: Text(
+        errorMsg,
+        style: TextStyle(
+          color: Colors.red,
+          fontFamily: 'Google-Sans Medium',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+    // throw Exception('Error registering: $errorMsg');
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VerificationScreen(phoneNumber: _mobile),
+        ),
+      );
+    });
   }
 }

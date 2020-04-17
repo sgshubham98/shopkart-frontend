@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shopkart_frontend/screens/home_page.dart';
 import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,14 +15,16 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   String _email, _password;
-  bool _obscureText = true;
+  bool _obscureText = true, _isSubmitting;
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
         body: SafeArea(
           child: SingleChildScrollView(
             child: Center(
@@ -120,19 +126,33 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.only(right: 42.0, left: 42.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        SimpleRoundButton(
-                          backgroundColor: Color(0xFF1BBC9B),
-                          textColor: Colors.white,
-                          buttonText: 'Log in',
-                          onPressed: (){
-                            _submit();
-                          },
-                        ),
+                        _isSubmitting == true
+                            ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Color(0xFF1BBC9B),
+                                ),
+                              )
+                            : Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: SimpleRoundButton(
+                                      backgroundColor: Color(0xFF1BBC9B),
+                                      textColor: Colors.white,
+                                      buttonText: 'Log in',
+                                      onPressed: () {
+                                        _submit();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
                         FlatButton(
-                          onPressed: (){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()));
                           },
                           child: Text('New user? Register'),
                         ),
@@ -148,10 +168,78 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
   void _submit() {
     final form = _formKey.currentState;
-    if(form.validate()){
+    if (form.validate()) {
       form.save();
+      _loginUser();
     }
+  }
+
+  void _loginUser() async {
+    setState(() {
+      _isSubmitting = true;
+    });
+    http.Response response = await http
+        .post('https://shopkart-inc.herokuapp.com/api/users/login', body: {
+      "email": _email,
+      "password": _password
+    });
+    final responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      setState(() {
+        _isSubmitting = false;
+      });
+      _showSuccessSnack();
+      _redirectUser();
+      print(responseData);
+    } else {
+      setState(() {
+        _isSubmitting = false;
+      });
+      final String errorMsg = responseData['message'];
+      _showErrorSnackBar(errorMsg);
+    }
+  }
+
+  void _showSuccessSnack() {
+    final snackBar = SnackBar(
+      content: Text(
+        'User Successfully Logged in!',
+        style: TextStyle(
+          color: Colors.green,
+          fontFamily: 'Google-Sans Medium',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+    _formKey.currentState.reset();
+  }
+
+  void _showErrorSnackBar(String errorMsg) {
+    final snackBar = SnackBar(
+      content: Text(
+        errorMsg,
+        style: TextStyle(
+          color: Colors.red,
+          fontFamily: 'Google-Sans Medium',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+    _scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+  void _redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    });
   }
 }

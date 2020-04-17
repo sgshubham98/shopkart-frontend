@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 
 const kButtonTextStyle = TextStyle(
   fontFamily: 'GoogleSans-Medium',
@@ -27,9 +28,7 @@ const kTextFormStyle = TextStyle(
   color: Colors.white,
 );
 
-const kHintTextStyle = TextStyle(
-  fontFamily: 'GoogleSans-Regular'
-);
+const kHintTextStyle = TextStyle(fontFamily: 'GoogleSans-Regular');
 
 const kTextFieldDecoration = InputDecoration(
   filled: true,
@@ -40,6 +39,11 @@ const kTextFieldDecoration = InputDecoration(
   border: OutlineInputBorder(),
 );
 
+var kAppBar = AppBar(
+  centerTitle: true,
+  backgroundColor: Colors.white,
+  title: ShopkartLogoAppBar(),
+);
 
 final String apiUrl = 'https://shopkart-inc.herokuapp.com/';
 final String apiUserRegister = 'api/users/register';
