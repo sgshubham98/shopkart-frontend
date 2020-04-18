@@ -36,14 +36,26 @@ const kTextFieldDecoration = InputDecoration(
   labelText: 'Enter a value',
   hintText: 'Enter a value',
   hintStyle: kHintTextStyle,
+  alignLabelWithHint: true,
   border: OutlineInputBorder(),
 );
 
 var kAppBar = AppBar(
-  centerTitle: true,
-  backgroundColor: Colors.white,
   title: ShopkartLogoAppBar(),
+  centerTitle: true,
+  leading: Image(
+    image: AssetImage(
+      'assets/images/menu_icon.png',
+    ),
+  ),
+  elevation: 0,
+  backgroundColor: Colors.white,
+  brightness: Brightness.light,
 );
 
 final String apiUrl = 'https://shopkart-inc.herokuapp.com/';
 final String apiUserRegister = 'api/users/register';
+
+/* Colors */
+const kPrimaryColor = Color(0xFF2D3E50);
+const kSecondaryColor = Color(0xFF1BBC9B);

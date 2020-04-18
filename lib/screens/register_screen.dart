@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopkart_frontend/screens/login_screen.dart';
-import 'package:shopkart_frontend/screens/verification_screen.dart';
+import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -14,13 +14,12 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
-  bool _obscureText = true, _obscureConfirmText = true, _isSubmitting;
+  bool _obscureText = true, _isSubmitting;
   String _firstName,
       _lastName,
       _email,
       _mobile,
       _password,
-      _confirmPassword,
       _referralCode,
       _role = "customer";
 
@@ -63,180 +62,173 @@ class _RegisterPageState extends State<RegisterPage> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              TextFormField(
-                                keyboardType: TextInputType.text,
-                                onSaved: (value) {
-                                  _firstName = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'First name',
-                                  hintText: 'Enter first name',
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
                                 ),
-                                validator: (val) {
-                                  String patttern = r'(^[a-zA-Z ]*$)';
-                                  RegExp regExp = RegExp(patttern);
-                                  if (val.length == 0) {
-                                    return "First name is Required";
-                                  } else if (!regExp.hasMatch(val)) {
-                                    return "First name must be a-z and A-Z";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 12.0,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.text,
-                                onSaved: (value) {
-                                  _lastName = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'Last name',
-                                  hintText: 'Enter last name',
-                                ),
-                                validator: (val) {
-                                  String patttern = r'(^[a-zA-Z ]*$)';
-                                  RegExp regExp = RegExp(patttern);
-                                  if (val.length == 0) {
-                                    return "Last name is Required";
-                                  } else if (!regExp.hasMatch(val)) {
-                                    return "Last name must be a-z and A-Z";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 12.0,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                onSaved: (value) {
-                                  _email = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'Email',
-                                  hintText: 'Enter your email',
-                                ),
-                                validator: (val) {
-                                  String pattern =
-                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                  RegExp regExp = new RegExp(pattern);
-                                  if (val.length == 0) {
-                                    return "Email is Required";
-                                  } else if (!regExp.hasMatch(val)) {
-                                    return "Invalid Email";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                height: 12.0,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.number,
-                                onSaved: (value) {
-                                  _mobile = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'Phone',
-                                  hintText: 'Enter your mobile number',
-                                ),
-                                validator: (val) {
-                                  String patttern = r'(^[0-9]*$)';
-                                  RegExp regExp = new RegExp(patttern);
-                                  if (val.length == 0) {
-                                    return "Mobile is Required";
-                                  } else if (val.length != 10) {
-                                    return "Mobile number must 10 digits";
-                                  } else if (!regExp.hasMatch(val)) {
-                                    return "Mobile Number must be digits";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: 12.0,
-                              ),
-                              TextFormField(
-                                obscureText: _obscureText,
-                                onSaved: (value) {
-                                  _password = value;
-                                },
-                                decoration: InputDecoration(
-                                  suffixIcon: GestureDetector(
-                                    child: Icon(
-                                      _obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        _obscureText = !_obscureText;
-                                      });
-                                    },
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  onSaved: (value) {
+                                    _firstName = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'First name',
+                                    hintText: 'Enter first name',
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  labelText: 'Password',
-                                  hintText: 'Enter your password',
-                                  hintStyle: kHintTextStyle,
-                                  border: OutlineInputBorder(),
+                                  validator: (val) {
+                                    String patttern = r'(^[a-zA-Z ]*$)';
+                                    RegExp regExp = RegExp(patttern);
+                                    if (val.length == 0) {
+                                      return "First name is Required";
+                                    } else if (!regExp.hasMatch(val)) {
+                                      return "First name must be a-z and A-Z";
+                                    }
+                                    return null;
+                                  },
                                 ),
-                                validator: (val) {
-                                  if (val.length >= 8) return null;
-                                  return 'Password must be of 8 characters!';
-                                },
                               ),
                               SizedBox(
                                 height: 12.0,
                               ),
-                              TextFormField(
-                                obscureText: _obscureConfirmText,
-                                onSaved: (value) {
-                                  _confirmPassword = value;
-                                },
-                                decoration: InputDecoration(
-                                  suffixIcon: GestureDetector(
-                                    child: Icon(
-                                      _obscureConfirmText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        _obscureConfirmText =
-                                            !_obscureConfirmText;
-                                      });
-                                    },
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  labelText: 'Confirm Password',
-                                  hintText: 'Confirm your password',
-                                  hintStyle: kHintTextStyle,
-                                  border: OutlineInputBorder(),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
                                 ),
-                                validator: (val) {
-                                  if (val.length >= 8)
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  onSaved: (value) {
+                                    _lastName = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'Last name',
+                                    hintText: 'Enter last name',
+                                  ),
+                                  validator: (val) {
+                                    String patttern = r'(^[a-zA-Z ]*$)';
+                                    RegExp regExp = RegExp(patttern);
+                                    if (val.length == 0) {
+                                      return "Last name is Required";
+                                    } else if (!regExp.hasMatch(val)) {
+                                      return "Last name must be a-z and A-Z";
+                                    }
                                     return null;
-                                  else if (val.length < 8)
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
+                                ),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
+                                  onSaved: (value) {
+                                    _email = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'Email',
+                                    hintText: 'Enter your email',
+                                  ),
+                                  validator: (val) {
+                                    String pattern =
+                                        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                    RegExp regExp = new RegExp(pattern);
+                                    if (val.length == 0) {
+                                      return "Email is Required";
+                                    } else if (!regExp.hasMatch(val)) {
+                                      return "Invalid Email";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
+                                ),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  onSaved: (value) {
+                                    _mobile = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'Phone',
+                                    hintText: 'Enter your mobile number',
+                                  ),
+                                  validator: (val) {
+                                    String patttern = r'(^[0-9]*$)';
+                                    RegExp regExp = new RegExp(patttern);
+                                    if (val.length == 0) {
+                                      return "Mobile is Required";
+                                    } else if (val.length != 10) {
+                                      return "Mobile number must 10 digits";
+                                    } else if (!regExp.hasMatch(val)) {
+                                      return "Mobile Number must be digits";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.0,
+                              ),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
+                                ),
+                                child: TextFormField(
+                                  obscureText: _obscureText,
+                                  onSaved: (value) {
+                                    _password = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    suffixIcon: GestureDetector(
+                                      child: Icon(
+                                        _obscureText
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      },
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelText: 'Password',
+                                    hintText: 'Enter your password',
+                                    hintStyle: kHintTextStyle,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: (val) {
+                                    if (val.length >= 8) return null;
                                     return 'Password must be of 8 characters!';
-                                  return 'Password is required';
-                                },
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 12.0,
                               ),
-                              TextFormField(
-                                keyboardType: TextInputType.text,
-                                onSaved: (value) {
-                                  _referralCode = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'Referral code',
-                                  hintText: 'Enter your referral code',
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
+                                ),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.text,
+                                  onSaved: (value) {
+                                    _referralCode = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'Referral code',
+                                    hintText: 'Enter your referral code',
+                                  ),
                                 ),
                               ),
                               SizedBox(
@@ -278,9 +270,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         FlatButton(
                           onPressed: () {
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
                           },
                           child: Text('Existing user? Login'),
                         ),
@@ -316,7 +310,7 @@ class _RegisterPageState extends State<RegisterPage> {
       "email": _email,
       "contact": _mobile,
       "password": _password,
-      "confirmPassword": _confirmPassword,
+      "confirmPassword": _password,
       "role": _role,
     });
     final responseData = json.decode(response.body);
@@ -351,7 +345,7 @@ class _RegisterPageState extends State<RegisterPage> {
     _formKey.currentState.reset();
   }
 
-  void _showErrorSnackBar(String errorMsg){
+  void _showErrorSnackBar(String errorMsg) {
     final snackBar = SnackBar(
       content: Text(
         errorMsg,
@@ -371,7 +365,7 @@ class _RegisterPageState extends State<RegisterPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => VerificationScreen(phoneNumber: _mobile),
+          builder: (context) => OtpScreen(phoneNumber: _mobile),
         ),
       );
     });

@@ -4,7 +4,6 @@ import 'package:shopkart_frontend/screens/splash_screen.dart';
 import 'package:shopkart_frontend/screens/home_page.dart';
 import 'package:shopkart_frontend/screens/intro_screen.dart';
 import 'package:shopkart_frontend/screens/login_screen.dart';
-import 'package:shopkart_frontend/screens/verification_screen.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,7 +19,6 @@ class MyApp extends StatelessWidget {
         '/IntroScreen': (BuildContext context) => IntroScreen(),
         '/LoginPage': (BuildContext context) => LoginPage(),
         '/RegisterPage': (BuildContext context) => RegisterPage(),
-        '/VerificationScreen': (BuildContext context) => VerificationScreen(),
       },
     );
   }

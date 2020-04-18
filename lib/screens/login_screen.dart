@@ -1,7 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shopkart_frontend/screens/home_page.dart';
+import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _email, _password;
+  String _mobile, _password;
   bool _obscureText = true, _isSubmitting;
 
   @override
@@ -56,60 +56,92 @@ class _LoginPageState extends State<LoginPage> {
                               SizedBox(
                                 height: 16.0,
                               ),
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                onSaved: (value) {
-                                  _email = value;
-                                },
-                                decoration: kTextFieldDecoration.copyWith(
-                                  labelText: 'Email',
-                                  hintText: 'Enter your email',
+                              // TextFormField(
+                              //   keyboardType: TextInputType.emailAddress,
+                              //   onSaved: (value) {
+                              //     _email = value;
+                              //   },
+                              //   decoration: kTextFieldDecoration.copyWith(
+                              //     labelText: 'Email',
+                              //     hintText: 'Enter your email',
+                              //   ),
+                              //   validator: (val) {
+                              //     String pattern =
+                              //         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                              //     RegExp regExp = new RegExp(pattern);
+                              //     if (val.length == 0) {
+                              //       return "Email is Required";
+                              //     } else if (!regExp.hasMatch(val)) {
+                              //       return "Invalid Email";
+                              //     } else {
+                              //       return null;
+                              //     }
+                              //   },
+                              // ),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
                                 ),
-                                validator: (val) {
-                                  String pattern =
-                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                  RegExp regExp = new RegExp(pattern);
-                                  if (val.length == 0) {
-                                    return "Email is Required";
-                                  } else if (!regExp.hasMatch(val)) {
-                                    return "Invalid Email";
-                                  } else {
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  onSaved: (value) {
+                                    _mobile = value;
+                                  },
+                                  decoration: kTextFieldDecoration.copyWith(
+                                    labelText: 'Mobile number',
+                                    hintText: 'Enter your mobile number',
+                                  ),
+                                  validator: (val) {
+                                    String patttern = r'(^[0-9]*$)';
+                                    RegExp regExp = new RegExp(patttern);
+                                    if (val.length == 0) {
+                                      return "Mobile is Required";
+                                    } else if (val.length != 10) {
+                                      return "Mobile number must 10 digits";
+                                    } else if (!regExp.hasMatch(val)) {
+                                      return "Mobile Number must be digits";
+                                    }
                                     return null;
-                                  }
-                                },
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 12.0,
                               ),
-                              TextFormField(
-                                obscureText: _obscureText,
-                                onSaved: (value) {
-                                  _password = value;
-                                },
-                                decoration: InputDecoration(
-                                  suffixIcon: GestureDetector(
-                                    child: Icon(
-                                      _obscureText
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        _obscureText = !_obscureText;
-                                      });
-                                    },
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  labelText: 'Password',
-                                  hintText: 'Enter your password',
-                                  hintStyle: kHintTextStyle,
-                                  border: OutlineInputBorder(),
+                              Theme(
+                                data: ThemeData(
+                                  primaryColor: kSecondaryColor,
                                 ),
-                                validator: (val) {
-                                  if (val.length >= 8) return null;
-                                  return 'Password must be of 8 characters!';
-                                },
+                                child: TextFormField(
+                                  obscureText: _obscureText,
+                                  onSaved: (value) {
+                                    _password = value;
+                                  },
+                                  decoration: InputDecoration(
+                                    suffixIcon: GestureDetector(
+                                      child: Icon(
+                                        _obscureText
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _obscureText = !_obscureText;
+                                        });
+                                      },
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    labelText: 'Password',
+                                    hintText: 'Enter your password',
+                                    hintStyle: kHintTextStyle,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: (val) {
+                                    if (val.length >= 8) return null;
+                                    return 'Password must be of 8 characters!';
+                                  },
+                                ),
                               ),
                               SizedBox(
                                 height: 24.0,
@@ -150,11 +182,34 @@ class _LoginPageState extends State<LoginPage> {
                         FlatButton(
                           onPressed: () {
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RegisterPage()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                              ),
+                            );
                           },
-                          child: Text('New user? Register'),
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RegisterPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'New user? Register',
+                            style: TextStyle(
+                              color: Colors.black54,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -181,12 +236,11 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isSubmitting = true;
     });
-    http.Response response = await http
-        .post('https://shopkart-inc.herokuapp.com/api/users/login', body: {
-      "email": _email,
-      "password": _password
-    });
+    http.Response response = await http.post(
+        'https://shopkart-inc.herokuapp.com/api/users/login',
+        body: {"mobile": _mobile, "password": _password});
     final responseData = json.decode(response.body);
+    final String errorMsg = responseData['message'];
     if (response.statusCode == 200) {
       setState(() {
         _isSubmitting = false;
@@ -194,11 +248,16 @@ class _LoginPageState extends State<LoginPage> {
       _showSuccessSnack();
       _redirectUser();
       print(responseData);
+    } else if (errorMsg.contains('Mobile')) {
+      setState(() {
+        _isSubmitting = false;
+      });
+      _showErrorSnackBar(errorMsg);
+      _redirectUserToOtp();
     } else {
       setState(() {
         _isSubmitting = false;
       });
-      final String errorMsg = responseData['message'];
       _showErrorSnackBar(errorMsg);
     }
   }
@@ -238,6 +297,22 @@ class _LoginPageState extends State<LoginPage> {
         context,
         MaterialPageRoute(
           builder: (context) => HomePage(),
+        ),
+      );
+    });
+  }
+
+  void _redirectUserToOtp() {
+    Future.delayed(
+        Duration(
+          seconds: 2,
+        ), () {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OtpScreen(
+            phoneNumber: _mobile,
+          ),
         ),
       );
     });

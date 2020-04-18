@@ -47,7 +47,7 @@ class _IntroScreenState extends State<IntroScreen> {
                           buttonText: 'Sign in',
                           textColor: Colors.white,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
                           },
                         ),
                       ),
@@ -58,7 +58,7 @@ class _IntroScreenState extends State<IntroScreen> {
                           buttonText: 'Register',
                           textColor: Color(0xFFFFFFFF),
                           onPressed: () {
-                            Navigator.pushNamed(context, '/RegisterPage');
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterPage()));
                           },
                         ),
                       ),
