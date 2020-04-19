@@ -31,17 +31,17 @@ class MyApp extends StatelessWidget {
         title: "ShopKart",
         theme: ThemeData.light(),
         initialRoute: '/SplashScreen',
-        // home: HomePage(),
         routes: <String, WidgetBuilder>{
           '/HomePage': (BuildContext context) => HomePage(
             onInit: (){
               StoreProvider.of<AppState>(context).dispatch(getUserAction);
+              StoreProvider.of<AppState>(context).dispatch(getProductsAction);
             },
           ),
           '/SplashScreen': (BuildContext context) => SplashScreen(),
           '/IntroScreen': (BuildContext context) => IntroScreen(),
-          '/LoginPage': (BuildContext context) => LoginPage(),
-          '/RegisterPage': (BuildContext context) => RegisterPage(),
+          '/LoginScreen': (BuildContext context) => LoginPage(),
+          '/RegisterScreen': (BuildContext context) => RegisterPage(),
           '/OtpScreen': (BuildContext context) => OtpScreen(),
           '/ProfileScreen': (BuildContext context) => ProfileScreen(),
         },

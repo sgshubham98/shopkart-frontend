@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shopkart_frontend/screens/home_page.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
-import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -182,12 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                         FlatButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterPage(),
-                              ),
-                            );
+                            Navigator.pushNamed(context, '/RegisterScreen');
                           },
                           child: Text(
                             'Forgot Password?',
@@ -198,12 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         FlatButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterPage(),
-                              ),
-                            );
+                            Navigator.pushNamed(context, '/RegisterScreen');
                           },
                           child: Text(
                             'New user? Register',
@@ -265,7 +253,8 @@ class _LoginPageState extends State<LoginPage> {
 
   void _storeUserData(responseData) async {
     final prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> user = responseData;
+    Map<String, dynamic> user = responseData['user'];
+    user.putIfAbsent('token', () => responseData['token']);
     prefs.setString('user', json.encode(user));
   }
 
@@ -300,12 +289,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _redirectUser() {
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(),
-        ),
-      );
+      Navigator.pushReplacementNamed(context, '/HomePage');
     });
   }
 

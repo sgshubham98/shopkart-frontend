@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shopkart_frontend/screens/login_screen.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
@@ -269,12 +268,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                         FlatButton(
                           onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => LoginPage(),
-                              ),
-                            );
+                            Navigator.pushReplacementNamed(
+                                context, '/LoginScreen');
                           },
                           child: Text('Existing user? Login'),
                         ),

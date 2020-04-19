@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    widget.onInit;
+    widget.onInit();
   }
 
   @override

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-
 import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 
 class SplashScreen extends StatefulWidget {

@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shopkart_frontend/screens/intro_screen.dart';
-import 'package:shopkart_frontend/screens/login_screen.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -304,13 +302,12 @@ class _OtpScreenState extends State<OtpScreen>
       key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios, color: kPrimaryColor,),
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: kPrimaryColor,
+            ),
             onPressed: () {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => IntroScreen(),
-                  ));
+              Navigator.pushNamed(context, '/LoginScreen');
             }),
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -487,13 +484,8 @@ class _OtpScreenState extends State<OtpScreen>
   }
 
   void _redirectUser() {
-    Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => LoginPage(),
-        ),
-      );
+    Future.delayed(Duration(seconds: 0), () {
+      Navigator.pushReplacementNamed(context, '/LoginScreen');
     });
   }
 
