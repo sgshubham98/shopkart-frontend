@@ -32,6 +32,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Column(
@@ -42,7 +43,9 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             imgList,
             (index, i) {
               return Container(
-                width: screenWidth - 84,
+                width: orientation == Orientation.portrait
+                    ? screenWidth - 84
+                    : screenHeight - 84,
                 margin: EdgeInsets.all(5.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(
@@ -53,8 +56,12 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                       Image.asset(
                         i,
                         fit: BoxFit.cover,
-                        width: screenWidth - 84,
-                        height: screenHeight / 2,
+                        width: orientation == Orientation.portrait
+                            ? screenWidth - 84
+                            : screenHeight - 84,
+                        height: orientation == Orientation.portrait
+                            ? screenHeight / 2
+                            : screenWidth / 2,
                       ),
                       Positioned(
                         bottom: 0.0,
@@ -72,7 +79,9 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
                             ),
                           ),
                           padding: EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 8.0),
+                            vertical: 10.0,
+                            horizontal: 8.0,
+                          ),
                           child: CarouselText(
                             text: textList[index],
                           ),
@@ -86,12 +95,12 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
           ).toList(),
           autoPlay: true,
           autoPlayInterval: Duration(
-            seconds: 5,
+            seconds: 3,
           ),
           autoPlayAnimationDuration: Duration(
             milliseconds: 1600,
           ),
-          height: screenHeight / 2,
+          height: orientation == Orientation.portrait ? screenHeight / 2 : screenWidth / 2,
           pauseAutoPlayOnTouch: Duration(
             seconds: 2,
           ),
@@ -107,7 +116,7 @@ class _CarouselWithIndicatorState extends State<CarouselWithIndicator> {
             imgList,
             (index, url) {
               return Container(
-                width: _current==index? 32.0 : 20.0,
+                width: _current == index ? 32.0 : 20.0,
                 height: 3.0,
                 margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                 decoration: BoxDecoration(
