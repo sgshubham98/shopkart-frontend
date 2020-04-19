@@ -304,7 +304,7 @@ class _OtpScreenState extends State<OtpScreen>
       key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: Icon(Icons.arrow_back_ios, color: kPrimaryColor,),
             onPressed: () {
               Navigator.pushReplacement(
                   context,

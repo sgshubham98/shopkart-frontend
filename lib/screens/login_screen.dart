@@ -7,6 +7,7 @@ import 'package:shopkart_frontend/widgets/shopkart_logo.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -240,26 +241,32 @@ class _LoginPageState extends State<LoginPage> {
         'https://shopkart-inc.herokuapp.com/api/users/login',
         body: {"mobile": _mobile, "password": _password});
     final responseData = json.decode(response.body);
-    final String errorMsg = responseData['message'];
     if (response.statusCode == 200) {
       setState(() {
         _isSubmitting = false;
       });
       _showSuccessSnack();
+      _storeUserData(responseData);
       _redirectUser();
       print(responseData);
-    } else if (errorMsg.contains('Mobile')) {
+    } else if (responseData['message'].contains('Mobile')) {
       setState(() {
         _isSubmitting = false;
       });
-      _showErrorSnackBar(errorMsg);
+      _showErrorSnackBar(responseData['message']);
       _redirectUserToOtp();
     } else {
       setState(() {
         _isSubmitting = false;
       });
-      _showErrorSnackBar(errorMsg);
+      _showErrorSnackBar(responseData['message']);
     }
+  }
+
+  void _storeUserData(responseData) async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> user = responseData;
+    prefs.setString('user', json.encode(user));
   }
 
   void _showSuccessSnack() {

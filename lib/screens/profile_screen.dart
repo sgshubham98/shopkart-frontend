@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shopkart_frontend/screens/home_page.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.white,
           brightness: Brightness.light,
         ),
-        backgroundColor: Color(0xffafafaf),
+        backgroundColor: Color(0xffdfdfdf),
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -135,7 +136,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: const EdgeInsets.only(
                           top: 16.0, left: 16.0, right: 16.0),
                       child: ProfileBars(
-                        icon: Icons.exit_to_app,
+                        icon: FontAwesomeIcons.shoppingCart,
+                        text: 'View Orders',
+                        onTap: null,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 16.0, left: 16.0, right: 16.0),
+                      child: ProfileBars(
+                        icon: FontAwesomeIcons.signOutAlt,
                         text: 'Logout',
                         onTap: () {
                           Navigator.push(
