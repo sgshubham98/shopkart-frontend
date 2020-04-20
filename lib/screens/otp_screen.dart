@@ -414,7 +414,7 @@ class _OtpScreenState extends State<OtpScreen>
 
   void _resendOtp() async {
     http.Response response = await http.get(
-      'https://shopkart-inc.herokuapp.com/api/retryVerification/$mobile',
+      'https://shopkart-inc.herokuapp.com/api/users/retryVerification/$mobile',
     );
     final responseData = json.decode(response.body);
     final String errorMsg = responseData['message'];

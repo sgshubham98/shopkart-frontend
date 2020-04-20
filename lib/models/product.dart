@@ -4,8 +4,8 @@ class Product {
   String id;
   String name;
   String category;
-  String price;
-  String discount;
+  num price;
+  num discount;
   String manufacturer;
   String expiryDate;
   String manufacturingDate;

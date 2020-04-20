@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:shopkart_frontend/screens/home_page.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:shopkart_frontend/models/app_state.dart';
+import 'package:shopkart_frontend/redux/actions.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
+  final String name;
+  final String email;
+  final String mobile;
+
+  ProfileScreen({this.name, this.email, this.mobile});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,25 +38,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
               color: kPrimaryColor,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
+              Navigator.pushReplacementNamed(context, '/HomePage');
             },
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.person,
-              color: kPrimaryColor,),
+              icon: Icon(
+                Icons.person,
+                color: kPrimaryColor,
+              ),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
+                Navigator.pushReplacementNamed(context, '/ProfileScreen');
               },
             ),
           ],
@@ -80,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 12.0),
                           child: Text(
-                            'FirstName LastName',
+                            'Shubham Goswami',
                             style: TextStyle(
                               fontSize: 18.0,
                               color: Color(0xFF2D3E50),
@@ -144,15 +148,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 16.0, left: 16.0, right: 16.0),
-                      child: ProfileBars(
-                        icon: FontAwesomeIcons.signOutAlt,
-                        text: 'Logout',
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomePage(),
-                              ));
+                      child: StoreConnector<AppState, VoidCallback>(
+                        converter: (store) {
+                          return () => store.dispatch(logoutUserAction);
+                        },
+                        builder: (_, callback) {
+                          return ProfileBars(
+                            icon: FontAwesomeIcons.signOutAlt,
+                            text: 'Logout',
+                            onTap: () {
+                              callback;
+                              Navigator.pushReplacementNamed(
+                                  context, '/LoginScreen');
+                            },
+                          );
                         },
                       ),
                     ),

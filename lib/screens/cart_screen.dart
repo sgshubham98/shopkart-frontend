@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shopkart_frontend/utilities/constants.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -22,79 +23,84 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text("My Cart"),
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: kSecondaryColor,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            cartItemsList(),
-            SizedBox(
-              height: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Subtotal"),
-                      Text(
-                        "\$ 675",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Tax"),
-                      Text(
-                        "\$ 0",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
-                  ),
-                  Divider(
-                    thickness: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Total"),
-                      Text(
-                        "\$ 675",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+          home: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text("Cart"),
         ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: openCheckout,
-          child: Container(
-            height: 50,
-            color: Theme.of(context).primaryColor,
-            alignment: Alignment.center,
-            child: Text(
-              "Place order",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              cartItemsList(),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Subtotal"),
+                        Text(
+                          "\Rs. 500",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("GST"),
+                        Text(
+                          "\Rs. 0",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        )
+                      ],
+                    ),
+                    Divider(
+                      thickness: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text("Total"),
+                        Text(
+                          "\Rs. 500",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: openCheckout,
+            child: Container(
+              height: 50,
+              color: kSecondaryColor,
+              alignment: Alignment.center,
+              child: Text(
+                "Place order",
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
             ),
           ),
         ),
@@ -104,7 +110,7 @@ class _CartScreenState extends State<CartScreen> {
 
   Widget cartItemsList() {
     return ListView.builder(
-      itemCount: 3,
+      itemCount: 1,
       shrinkWrap: true,
       itemBuilder: (BuildContext context, int index) {
         return cartItem();
@@ -134,40 +140,37 @@ class _CartScreenState extends State<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Text("Half Sleeve Tshirt"),
+                    Text("Levopil", style: TextStyle(
+                      fontSize: 18.0,
+
+                    ),),
                     SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Container(
-                          height: 30,
-                          width: 30,
-                          color: Theme.of(context).primaryColor,
-                          alignment: Alignment.center,
-                          child: Text("-",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                        ),
-                        Text("1",
+                        Text("Oty:  5",
                             style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black)),
-                        Container(
-                          height: 30,
-                          width: 30,
-                          color: Theme.of(context).primaryColor,
-                          alignment: Alignment.center,
-                          child: Text("-",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
-                        )
+                                )),
+                        // Text("5",
+                        //     style: TextStyle(
+                        //         fontSize: 18,
+                        //         fontWeight: FontWeight.bold,
+                        //         color: Colors.black)),
+                        // Container(
+                        //   height: 30,
+                        //   width: 30,
+                        //   color: Theme.of(context).primaryColor,
+                        //   alignment: Alignment.center,
+                        //   child: Text("-",
+                        //       style: TextStyle(
+                        //           fontSize: 18,
+                        //           fontWeight: FontWeight.bold,
+                        //           color: Colors.white)),
+                        // )
                       ],
                     ),
                   ],
@@ -180,7 +183,7 @@ class _CartScreenState extends State<CartScreen> {
                 flex: 1,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text("\$255",
+                  child: Text("\Rs. 500",
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -205,7 +208,7 @@ class _CartScreenState extends State<CartScreen> {
 
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
-      'amount': 100,
+      'amount': 50000,
       'name': 'Test Payment',
       'description': 'This is a Text Payment',
       'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
