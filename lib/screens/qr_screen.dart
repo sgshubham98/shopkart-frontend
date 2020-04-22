@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/simple_round_button.dart';
 
@@ -80,7 +81,7 @@ class _QRScreenState extends State<QRScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(Icons.camera_alt),
+        icon: Icon(FontAwesomeIcons.qrcode),
         label: Text("Scan"),
         onPressed: _scanQR,
       ),

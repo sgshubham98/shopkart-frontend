@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:shopkart_frontend/models/app_state.dart';
-import 'package:shopkart_frontend/redux/actions.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
+import 'package:shopkart_frontend/widgets/app_drawer.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -26,150 +24,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: ShopkartLogoAppBar(),
-          centerTitle: true,
-          leading: IconButton(
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: kPrimaryColor),
+        title: Hero(
+          tag: 'logo',
+          child: ShopkartLogoAppBar(),
+        ),
+        actions: <Widget>[
+          IconButton(
             icon: Icon(
-              Icons.home,
+              FontAwesomeIcons.shoppingCart,
               color: kPrimaryColor,
             ),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/HomePage');
-            },
+            onPressed: () {},
           ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.person,
-                color: kPrimaryColor,
+        ],
+        elevation: 0,
+        backgroundColor: Colors.white,
+        brightness: Brightness.light,
+      ),
+      drawer: AppDrawer(),
+      backgroundColor: Color(0xffdfdfdf),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(28.0),
+                  bottomRight: Radius.circular(28.0),
+                ),
+                color: Colors.white,
               ),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/ProfileScreen');
-              },
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: Column(
+                    children: <Widget>[
+                      CircleAvatar(
+                        minRadius: 24.0,
+                        maxRadius: 44.0,
+                        backgroundImage: AssetImage(
+                          'assets/images/shop2.jpg',
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          'Shubham Goswami',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            color: Color(0xFF2D3E50),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'GoogleSans-Regular',
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          'sgshubham98@gmail.com',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: kPrimaryColor,
+                            fontFamily: 'GoogleSans-Regular',
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: Text(
+                          '+91 8868003003',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: kPrimaryColor,
+                            fontFamily: 'GoogleSans-Regular',
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, left: 16.0, right: 16.0),
+                    child: ProfileBars(
+                      icon: Icons.lock,
+                      text: 'Change Password',
+                      onTap: null,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, left: 16.0, right: 16.0),
+                    child: ProfileBars(
+                      icon: FontAwesomeIcons.shoppingCart,
+                      text: 'View Orders',
+                      onTap: null,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 16.0, left: 16.0, right: 16.0),
+                    child: ProfileBars(
+                      icon: FontAwesomeIcons.signOutAlt,
+                      text: 'Logout',
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, '/LoginScreen');
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
-          elevation: 0,
-          backgroundColor: Colors.white,
-          brightness: Brightness.light,
-        ),
-        backgroundColor: Color(0xffdfdfdf),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.4,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(28.0),
-                    bottomRight: Radius.circular(28.0),
-                  ),
-                  color: Colors.white,
-                ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Column(
-                      children: <Widget>[
-                        CircleAvatar(
-                          minRadius: 24.0,
-                          maxRadius: 44.0,
-                          backgroundImage: AssetImage(
-                            'assets/images/shop2.jpg',
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0),
-                          child: Text(
-                            'Shubham Goswami',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              color: Color(0xFF2D3E50),
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'GoogleSans-Regular',
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text(
-                            'sgshubham98@gmail.com',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: kPrimaryColor,
-                              fontFamily: 'GoogleSans-Regular',
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Text(
-                            '+91 8868003003',
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: kPrimaryColor,
-                              fontFamily: 'GoogleSans-Regular',
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 16.0, left: 16.0, right: 16.0),
-                      child: ProfileBars(
-                        icon: Icons.lock,
-                        text: 'Change Password',
-                        onTap: null,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 16.0, left: 16.0, right: 16.0),
-                      child: ProfileBars(
-                        icon: FontAwesomeIcons.shoppingCart,
-                        text: 'View Orders',
-                        onTap: null,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 16.0, left: 16.0, right: 16.0),
-                      child: StoreConnector<AppState, VoidCallback>(
-                        converter: (store) {
-                          return () => store.dispatch(logoutUserAction);
-                        },
-                        builder: (_, callback) {
-                          return ProfileBars(
-                            icon: FontAwesomeIcons.signOutAlt,
-                            text: 'Logout',
-                            onTap: () {
-                              callback;
-                              Navigator.pushReplacementNamed(
-                                  context, '/LoginScreen');
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

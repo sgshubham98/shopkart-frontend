@@ -3,14 +3,20 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopkart_frontend/models/http_exception.dart';
+import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
+  final String password;
 
   OtpScreen({
     this.phoneNumber,
+    this.password,
   });
 
   @override
@@ -41,7 +47,13 @@ class _OtpScreenState extends State<OtpScreen>
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String mobile;
+  String password;
   bool _isSubmitting, _isResend;
+
+  Map<String, String> _authData = {
+    'mobile': '',
+    'password': '',
+  };
 
   // Return "Verification Code" label
   get _getVerificationCodeLabel {
@@ -151,6 +163,7 @@ class _OtpScreenState extends State<OtpScreen>
         ),
       ),
       onTap: () {
+        //TODO: Implement the resend otp part
         _resendOtp();
       },
     );
@@ -275,6 +288,7 @@ class _OtpScreenState extends State<OtpScreen>
     totalTimeInSeconds = time;
     super.initState();
     mobile = widget.phoneNumber;
+    password = widget.password;
     _controller =
         AnimationController(vsync: this, duration: Duration(seconds: time))
           ..addStatusListener((status) {
@@ -302,13 +316,15 @@ class _OtpScreenState extends State<OtpScreen>
       key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: kPrimaryColor,
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/LoginScreen');
-            }),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: kPrimaryColor,
+          ),
+          onPressed: () {
+            Navigator.pushNamed(context, '/LoginScreen');
+          },
+        ),
+        title: ShopkartLogoAppBar(),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -412,6 +428,7 @@ class _OtpScreenState extends State<OtpScreen>
     );
   }
 
+  //TODO: Implement it completely
   void _resendOtp() async {
     http.Response response = await http.get(
       'https://shopkart-inc.herokuapp.com/api/users/retryVerification/$mobile',
@@ -422,7 +439,7 @@ class _OtpScreenState extends State<OtpScreen>
       setState(() {
         _isResend = false;
       });
-      _showSuccessSnack(responseData['message']);
+      // _showSuccessSnack(responseData['message']);
       _redirectUser();
       print(responseData);
     } else {
@@ -441,32 +458,37 @@ class _OtpScreenState extends State<OtpScreen>
     final responseData = json.decode(response.body);
     final String errorMsg = responseData['message'];
     if (response.statusCode == 200) {
+      _authData['mobile'] = mobile;
+      _authData['password'] = password;
+      try {
+        await Provider.of<AuthProvider>(context, listen: false).login(
+          _authData['mobile'],
+          _authData['password'],
+        );
+      } on HttpException catch (error) {
+        var errorMessage = "OTP Verification failed!";
+        if (error.toString().contains('Email')) {
+          errorMessage = error.toString();
+          _showErrorSnackBar(errorMessage);
+          _redirectUser();
+        } else {
+          errorMessage = error.toString();
+          _showErrorSnackBar(errorMessage);
+        }
+      } catch (error) {
+        const errorMessage =
+            'Could not authenticate you. Please try again later.';
+        _showErrorSnackBar(errorMessage);
+      }
       setState(() {
         _isSubmitting = false;
       });
-      _showSuccessSnack(responseData['message']);
-      _redirectUser();
-      print(responseData);
     } else {
+      _showErrorSnackBar(errorMsg);
       setState(() {
         _isSubmitting = false;
       });
-      _showErrorSnackBar(errorMsg);
     }
-  }
-
-  void _showSuccessSnack(String msg) {
-    final snackBar = SnackBar(
-      content: Text(
-        msg,
-        style: TextStyle(
-          color: Colors.green,
-          fontFamily: 'Google-Sans Medium',
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   void _showErrorSnackBar(String errorMsg) {
@@ -484,7 +506,7 @@ class _OtpScreenState extends State<OtpScreen>
   }
 
   void _redirectUser() {
-    Future.delayed(Duration(seconds: 0), () {
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(context, '/LoginScreen');
     });
   }

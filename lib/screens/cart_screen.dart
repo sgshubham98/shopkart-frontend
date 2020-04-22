@@ -23,84 +23,79 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: kSecondaryColor,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text("Cart"),
       ),
-          home: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text("Cart"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              cartItemsList(),
-              SizedBox(
-                height: 30,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            cartItemsList(),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Subtotal"),
+                      Text(
+                        "\Rs. 500",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("GST"),
+                      Text(
+                        "\Rs. 0",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      )
+                    ],
+                  ),
+                  Divider(
+                    thickness: 5,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text("Total"),
+                      Text(
+                        "\Rs. 500",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      )
+                    ],
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text("Subtotal"),
-                        Text(
-                          "\Rs. 500",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text("GST"),
-                        Text(
-                          "\Rs. 0",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        )
-                      ],
-                    ),
-                    Divider(
-                      thickness: 5,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text("Total"),
-                        Text(
-                          "\Rs. 500",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        bottomNavigationBar: SafeArea(
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: openCheckout,
-            child: Container(
-              height: 50,
-              color: kSecondaryColor,
-              alignment: Alignment.center,
-              child: Text(
-                "Place order",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: openCheckout,
+          child: Container(
+            height: 50,
+            color: kSecondaryColor,
+            alignment: Alignment.center,
+            child: Text(
+              "Place order",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
           ),
         ),
@@ -128,8 +123,7 @@ class _CartScreenState extends State<CartScreen> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: Image.asset(
-                    "assets/images/menu_icon.png"),
+                child: Image.asset("assets/images/menu_icon.png"),
               ),
               SizedBox(
                 width: 10,
@@ -140,37 +134,25 @@ class _CartScreenState extends State<CartScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Text("Levopil", style: TextStyle(
-                      fontSize: 18.0,
-
-                    ),),
+                    Text(
+                      "Levopil",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
                     SizedBox(
                       height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text("Oty:  5",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                )),
-                        // Text("5",
-                        //     style: TextStyle(
-                        //         fontSize: 18,
-                        //         fontWeight: FontWeight.bold,
-                        //         color: Colors.black)),
-                        // Container(
-                        //   height: 30,
-                        //   width: 30,
-                        //   color: Theme.of(context).primaryColor,
-                        //   alignment: Alignment.center,
-                        //   child: Text("-",
-                        //       style: TextStyle(
-                        //           fontSize: 18,
-                        //           fontWeight: FontWeight.bold,
-                        //           color: Colors.white)),
-                        // )
+                        Text(
+                          "Oty:  5",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                   ],
@@ -232,7 +214,7 @@ class _CartScreenState extends State<CartScreen> {
 
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
-          return PaymentSuccessful();
+      return PaymentSuccessful();
     }));
   }
 
@@ -257,8 +239,11 @@ class PaymentSuccessful extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Payment Successful"),
-
-      ),body: Text("Payment Successful",style: TextStyle(fontSize: 18),),
+      ),
+      body: Text(
+        "Payment Successful",
+        style: TextStyle(fontSize: 18),
+      ),
     );
   }
 }
