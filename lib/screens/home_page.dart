@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/app_drawer.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
@@ -20,6 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: kPrimaryColor),
@@ -108,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               height: 16.0,
             ),
             Image(
-              image: NetworkImage(''),
+              image: NetworkImage(authData.userProfile['qr']==null?'':authData.userProfile["qr"]),
               height: MediaQuery.of(context).size.height / 4,
               width: MediaQuery.of(context).size.height / 4,
             ),
@@ -123,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                     child: SimpleRoundButton(
                       onPressed: () {
                         Future.delayed(Duration(seconds: 3));
-                        Navigator.pushNamed(context, '/QRScreen');
+                        Navigator.pushNamed(context, '/CartScreen');
                       },
                       backgroundColor: kSecondaryColor,
                       buttonText: 'Start Shopping',

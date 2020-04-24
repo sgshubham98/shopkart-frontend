@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/models/http_exception.dart';
@@ -15,7 +17,15 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true, _isSubmitting;
-  String _firstName, _lastName, _email, _mobile, _password;
+   Map<String, String> _authData = {
+    'firstName': '',
+    'lastName': '',
+    'email': '',
+    'contact': '',
+    'password': '',
+    'confirmPassword': '',
+    'role': ''
+  };
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -62,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
                                 onSaved: (value) {
-                                  _firstName = value;
+                                  _authData['firstName'] = value;
                                 },
                                 decoration: kTextFieldDecoration.copyWith(
                                   labelText: 'First name',
@@ -90,7 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: TextFormField(
                                 keyboardType: TextInputType.text,
                                 onSaved: (value) {
-                                  _lastName = value;
+                                  _authData['lastName'] = value;
                                 },
                                 decoration: kTextFieldDecoration.copyWith(
                                   labelText: 'Last name',
@@ -118,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: TextFormField(
                                 keyboardType: TextInputType.emailAddress,
                                 onSaved: (value) {
-                                  _email = value;
+                                  _authData['email'] = value;
                                 },
                                 decoration: kTextFieldDecoration.copyWith(
                                   labelText: 'Email',
@@ -148,7 +158,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: TextFormField(
                                 keyboardType: TextInputType.number,
                                 onSaved: (value) {
-                                  _mobile = value;
+                                  _authData['contact'] = value;
                                 },
                                 decoration: kTextFieldDecoration.copyWith(
                                   labelText: 'Phone',
@@ -178,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: TextFormField(
                                 obscureText: _obscureText,
                                 onSaved: (value) {
-                                  _password = value;
+                                  _authData['password'] = value;
                                 },
                                 decoration: InputDecoration(
                                   suffixIcon: GestureDetector(
@@ -274,18 +284,27 @@ class _RegisterPageState extends State<RegisterPage> {
       _isSubmitting = true;
     });
     try {
+      _authData['confirmPassword'] = _authData['password'];
+      _authData['role'] = 'customer';
       await Provider.of<AuthProvider>(context, listen: false).signup(
-        _firstName,
-        _lastName,
-        _email,
-        _mobile,
-        _password,
+        _authData['firstName'],
+        _authData['lastName'],
+        _authData['email'],
+        _authData['contact'],
+        _authData['password'],
+        _authData['confirmPassword'],
+        _authData['role'],
       ).timeout(const Duration(seconds: 30), onTimeout: _onTimeout);
       _redirectUser();
     } on HttpException catch (error) {
       var errorMessage = "Authentication failed!";
       errorMessage = error.toString();
       _showErrorSnackBar(errorMessage);
+    } on SocketException catch(error) {
+      var errorMessage = "Check your connectivity";
+      _showErrorSnackBar("$errorMessage: $error");
+    } on Exception catch(error){
+      _showErrorSnackBar("Something's wrong!!: $error");
     }
     setState(() {
       _isSubmitting = false;
@@ -312,8 +331,8 @@ class _RegisterPageState extends State<RegisterPage> {
         context,
         MaterialPageRoute(
           builder: (context) => OtpScreen(
-            phoneNumber: _mobile,
-            password: _password,
+            phoneNumber: _authData['contact'],
+            password: _authData['password'],
           ),
         ),
       );

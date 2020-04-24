@@ -1,10 +1,20 @@
+import 'dart:convert';
+
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
+import 'package:shopkart_frontend/providers/auth_providers.dart';
+import 'package:shopkart_frontend/providers/cart_provider.dart' show Cart;
+import 'package:shopkart_frontend/widgets/cart_item.dart';
+import 'package:shopkart_frontend/providers/orders_provider.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 
 class CartScreen extends StatefulWidget {
+  static const routeName = '/cart';
   @override
   _CartScreenState createState() => _CartScreenState();
 }
@@ -23,170 +33,105 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final cart = Provider.of<Cart>(context, listen: false);
+    final authData = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text("Cart"),
+        title: Text('Your Cart'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            cartItemsList(),
-            SizedBox(
-              height: 30,
+      bottomNavigationBar: Row(
+        children: <Widget>[
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => _scanQR(),
+              child: Container(
+                height: 50,
+                color: kSecondaryColor,
+                alignment: Alignment.center,
+                child: Text(
+                  "Scan Product",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
+          ),
+          SizedBox(width: 2.0,),
+          Expanded(
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () => openCheckout(cart),
+              child: Container(
+                height: 50,
+                color: kSecondaryColor,
+                alignment: Alignment.center,
+                child: Text(
+                  "Place order",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Card(
+            margin: EdgeInsets.all(15),
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Subtotal"),
-                      Text(
-                        "\Rs. 500",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
+                  Text(
+                    'Total',
+                    style: TextStyle(fontSize: 20),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("GST"),
-                      Text(
-                        "\Rs. 0",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
-                  ),
-                  Divider(
-                    thickness: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Total"),
-                      Text(
-                        "\Rs. 500",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      )
-                    ],
+                  Spacer(),
+                  Chip(
+                    label: Text(
+                      'He',
+                      // '\$${cart.totalAmount.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    backgroundColor: kSecondaryColor,
                   ),
                 ],
               ),
-            )
-          ],
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: openCheckout,
-          child: Container(
-            height: 50,
-            color: kSecondaryColor,
-            alignment: Alignment.center,
-            child: Text(
-              "Place order",
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget cartItemsList() {
-    return ListView.builder(
-      itemCount: 1,
-      shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) {
-        return cartItem();
-      },
-    );
-  }
-
-  Widget cartItem() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Image.asset("assets/images/menu_icon.png"),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                flex: 2,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      "Levopil",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          "Oty:  5",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Expanded(
-                flex: 1,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Text("\Rs. 500",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black)),
-                ),
-              )
-            ],
-          ),
-          Divider(
-            thickness: 2,
-          )
+          SizedBox(height: 10),
+          // Expanded(
+          //   child: ListView.builder(
+          //     itemCount: cart.items.length,
+          //     //TODO: implemen this according to need
+          //     itemBuilder: (ctx, i) => CartItem(
+          //       cart.items.values.toList()[i].id,
+          //       cart.items.keys.toList()[i],
+          //       cart.items.values.toList()[i].price,
+          //       cart.items.values.toList()[i].quantity,
+          //       cart.items.values.toList()[i].title,
+          //       cart.items.values.toList()[i].discount,
+          //       cart.items.values.toList()[i].manufacturer,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
-  void openCheckout() async {
+  void openCheckout(Cart cart) async {
     double price = 5000.56 * 100;
     print(price);
-
-    // int.parse((price*100).toString());
 
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
@@ -201,6 +146,12 @@ class _CartScreenState extends State<CartScreen> {
 
     try {
       _razorpay.open(options);
+      await Provider.of<Orders>(context, listen: false).addOrder(
+        cart.items.values.toList(),
+        cart.totalAmount,
+      );
+
+      cart.clearCart();
     } catch (e) {
       debugPrint(e);
     }
@@ -211,11 +162,6 @@ class _CartScreenState extends State<CartScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
-
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (BuildContext context) {
-      return PaymentSuccessful();
-    }));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -231,19 +177,92 @@ class _CartScreenState extends State<CartScreen> {
     Fluttertoast.showToast(
         msg: "EXTERNAL_WALLET: " + response.walletName, timeInSecForIosWeb: 4);
   }
+
+  Future _scanQR() async {
+    final cart = Provider.of<Cart>(context, listen: false);
+    try {
+      ScanResult qrResult = await BarcodeScanner.scan();
+      Map<String, dynamic> result = json.decode(qrResult.rawContent);
+      //TODO: implement according to the api and provider class
+      setState(() {
+        cart.addItem(result['name'], result['price'], result['discount'], result[], result[]);
+        Scaffold.of(context).hideCurrentSnackBar();
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Added item to cart!',
+            ),
+            duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: 'UNDO',
+              onPressed: () {
+                cart.removeSingleItem(result[]);
+              },
+            ),
+          ),
+        );
+        // print(result);
+        // print(qrResult.rawContent);
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.cameraAccessDenied) {
+        setState(() {
+          Fluttertoast.showToast(
+              msg: "Camera permission was denied", timeInSecForIosWeb: 2);
+        });
+      } else {
+        setState(() {
+          Fluttertoast.showToast(msg: "Unknown Error $ex");
+        });
+      }
+    } on FormatException {
+      setState(() {
+        Fluttertoast.showToast(
+            msg: "You pressed the back button before scanning anything",
+            timeInSecForIosWeb: 2);
+      });
+    } catch (ex) {
+      setState(() {
+        Fluttertoast.showToast(msg: "Unknown Error $ex");
+      });
+    }
+  }
 }
 
-class PaymentSuccessful extends StatelessWidget {
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    @required this.cart,
+  });
+
+  final Cart cart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Payment Successful"),
-      ),
-      body: Text(
-        "Payment Successful",
-        style: TextStyle(fontSize: 18),
-      ),
+    return FlatButton(
+      child: _isLoading ? CircularProgressIndicator() : Text('ORDER NOW'),
+      onPressed: (widget.cart.totalAmount <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await Provider.of<Orders>(context, listen: false).addOrder(
+                widget.cart.items.values.toList(),
+                widget.cart.totalAmount,
+              );
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clearCart();
+            },
+      textColor: Theme.of(context).primaryColor,
     );
   }
 }

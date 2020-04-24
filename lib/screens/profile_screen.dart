@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/app_drawer.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String name;
-  final String email;
-  final String mobile;
-
-  ProfileScreen({this.name, this.email, this.mobile});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -24,6 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authData = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -32,18 +30,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           tag: 'logo',
           child: ShopkartLogoAppBar(),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              FontAwesomeIcons.shoppingCart,
-              color: kPrimaryColor,
-            ),
-            onPressed: () {},
-          ),
-        ],
         elevation: 0,
         backgroundColor: Colors.white,
-        brightness: Brightness.light,
       ),
       drawer: AppDrawer(),
       backgroundColor: Color(0xffdfdfdf),
@@ -74,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
                         child: Text(
-                          'Shubham Goswami',
+                          authData.userProfile['name'],
                           style: TextStyle(
                             fontSize: 18.0,
                             color: Color(0xFF2D3E50),
@@ -87,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          'sgshubham98@gmail.com',
+                          authData.userProfile['email'],
                           style: TextStyle(
                             fontSize: 16.0,
                             color: kPrimaryColor,
@@ -99,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          '+91 8868003003',
+                          authData.userProfile['phone'],
                           style: TextStyle(
                             fontSize: 16.0,
                             color: kPrimaryColor,

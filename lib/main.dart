@@ -3,11 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart';
+import 'package:shopkart_frontend/providers/products_provider.dart';
 import 'package:shopkart_frontend/screens/cart_screen.dart';
 import 'package:shopkart_frontend/screens/loading_screen.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/screens/profile_screen.dart';
-import 'package:shopkart_frontend/screens/qr_screen.dart';
 import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/screens/splash_screen.dart';
 import 'package:shopkart_frontend/screens/home_page.dart';
@@ -30,6 +30,13 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProxyProvider<AuthProvider, Products>(
+          builder: (context, auth, previousProducts) => Products(
+            auth.token,
+            auth.userId,
+            previousProducts == null ? [] : previousProducts.products,
+          ),
+        ),
       ],
       child: Consumer<AuthProvider>(
         builder: (context, auth, _) => MaterialApp(
@@ -54,7 +61,6 @@ class MyApp extends StatelessWidget {
             '/OtpScreen': (BuildContext context) => OtpScreen(),
             '/HomePage': (BuildContext context) => HomePage(),
             '/ProfileScreen': (BuildContext context) => ProfileScreen(),
-            '/QRScreen': (BuildContext context) => QRScreen(),
             '/CartScreen': (BuildContext context) => CartScreen(),
           },
         ),

@@ -5,3 +5,5 @@ const VERIFY_CONTACT = "/api/users/verifyMobile";
 const PROFILE = "/api/users/profile";
 const FORGET_PASSWORD = "/api/users/forgetpassword";
 const VIEW_PRODUCTS = "/api/shop/viewall";
+const ADD_ORDER = "/api/shop/previousOrders";
+const GET_STATUS = "/api/shop/qrStatus";

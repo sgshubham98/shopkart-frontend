@@ -34,6 +34,18 @@ class AuthProvider with ChangeNotifier {
     return _userId;
   }
 
+  Map<String, dynamic> get userProfile {
+    if (isAuth) {
+      return {
+        "name": _name,
+        "phone": _phone,
+        "email": _email,
+        "qr": _userQr,
+      };
+    }
+    return {};
+  }
+
   Future<void> login(String phone, String password) async {
     final url = Uri.http(api.BASE_URL, api.LOGIN);
     try {
@@ -44,7 +56,7 @@ class AuthProvider with ChangeNotifier {
           'password': password,
         }),
         headers: {
-          "Content-Type":"application/json",
+          "Content-Type": "application/json",
         },
       );
       final responseData = json.decode(response.body);
@@ -80,9 +92,14 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  //TODO: complete the signup function with all the changes
-  Future<void> signup(String firstName, String lastName, String email,
-      String mobile, String password) async {
+  Future<void> signup(
+      String firstName,
+      String lastName,
+      String email,
+      String mobile,
+      String password,
+      String confirmPassword,
+      String role) async {
     final url = Uri.http(api.BASE_URL, api.REGISTER);
     try {
       final response = await http.post(
@@ -93,8 +110,8 @@ class AuthProvider with ChangeNotifier {
           "email": email,
           "contact": mobile,
           "password": password,
-          "confirmPassword": password,
-          "role": "customer"
+          "confirmPassword": confirmPassword,
+          "role": role,
         }),
       );
       final responseData = json.decode(response.body);
@@ -121,6 +138,10 @@ class AuthProvider with ChangeNotifier {
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
+    _userQr = extractedUserData['qr'];
+    _name = extractedUserData['name'];
+    _phone = extractedUserData['phone'];
+    _email = extractedUserData['email'];
     _expiryDate = expiryDate;
     notifyListeners();
     _autoLogout();
@@ -131,6 +152,10 @@ class AuthProvider with ChangeNotifier {
     _token = null;
     _userId = null;
     _expiryDate = null;
+    _userQr = null;
+    _phone = null;
+    _name = null;
+    _email = null;
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;

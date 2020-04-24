@@ -111,7 +111,11 @@ class _OtpScreenState extends State<OtpScreen>
                 ),
               )
             : _getInputField,
-        _hideResendButton ? _getTimerText : _getResendButton,
+        _hideResendButton ? _getTimerText : (_isResend == true) ? CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  kPrimaryColor,
+                                ),
+                              ) :_getResendButton,
         _getOtpKeyboard
       ],
     );
@@ -163,7 +167,7 @@ class _OtpScreenState extends State<OtpScreen>
         ),
       ),
       onTap: () {
-        //TODO: Implement the resend otp part
+        _isResend = true;
         _resendOtp();
       },
     );
@@ -428,26 +432,31 @@ class _OtpScreenState extends State<OtpScreen>
     );
   }
 
-  //TODO: Implement it completely
   void _resendOtp() async {
-    http.Response response = await http.get(
-      'https://shopkart-inc.herokuapp.com/api/users/retryVerification/$mobile',
-    );
-    final responseData = json.decode(response.body);
-    final String errorMsg = responseData['message'];
-    if (response.statusCode == 200) {
-      setState(() {
-        _isResend = false;
-      });
-      // _showSuccessSnack(responseData['message']);
-      _redirectUser();
-      print(responseData);
-    } else {
-      setState(() {
-        _isResend = false;
-      });
-      _showErrorSnackBar(errorMsg);
+    try {
+      http.Response response = await http.get(
+        'https://shopkart-inc.herokuapp.com/api/users/retryVerification/$mobile',
+      );
+      final responseData = json.decode(response.body);
+      final String errorMsg = responseData['message'];
+      if (response.statusCode == 200) {
+        setState(() {
+          _isResend = false;
+        });
+        _startCountdown();
+        print(responseData);
+      } else {
+        setState(() {
+          _isResend = false;
+        });
+        _showErrorSnackBar(errorMsg);
+      }
+    } on Exception catch (error) {
+      _showErrorSnackBar(error.toString());
     }
+    setState(() {
+      _isResend = false;
+    });
   }
 
   void _verifyOtp(String otp) async {
@@ -465,6 +474,7 @@ class _OtpScreenState extends State<OtpScreen>
           _authData['mobile'],
           _authData['password'],
         );
+        Navigator.pushReplacementNamed(context, '/HomePage');
       } on HttpException catch (error) {
         var errorMessage = "OTP Verification failed!";
         if (error.toString().contains('Email')) {

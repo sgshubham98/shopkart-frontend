@@ -10,11 +10,13 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SpinKitDoubleBounce(
-          color: kSecondaryColor,
-          size: 50.0,
+    return SafeArea(
+      child: Scaffold(
+        body: Center(
+          child: SpinKitDoubleBounce(
+            color: kSecondaryColor,
+            size: 50.0,
+          ),
         ),
       ),
     );

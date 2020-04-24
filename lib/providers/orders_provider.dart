@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopkart_frontend/utilities/routes.dart' as api;
 import 'package:shopkart_frontend/providers/cart_provider.dart';
 
 class OrderItem {
@@ -29,9 +30,13 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchAndSetOrders() async {
-    //TODO: Change the url to fetch products whenever api gets ready
-    final url = '';
-    final response = await http.get(url);
+    final url = Uri.http(api.BASE_URL, api.ADD_ORDER);
+    final response = await http.get(
+      url,
+      headers: {
+        "x-auth-token": authToken,
+      },
+    );
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData == null) {
@@ -46,11 +51,11 @@ class Orders with ChangeNotifier {
           products: (orderData['products'] as List<dynamic>)
               .map(
                 (item) => CartItem(
-                      id: item['id'],
-                      price: item['price'],
-                      quantity: item['quantity'],
-                      title: item['title'],
-                    ),
+                  id: item['id'],
+                  price: item['price'],
+                  quantity: item['quantity'],
+                  title: item['title'],
+                ),
               )
               .toList(),
         ),
@@ -61,21 +66,26 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    //TODO: Change the url of addOrders whenever api gets ready
-    final url = '';
+    final url = Uri.http(api.BASE_URL, api.ADD_ORDER);
     final timestamp = DateTime.now();
     final response = await http.post(
       url,
+      headers: {
+        "x-auth-token": authToken,
+      },
       body: json.encode({
         'amount': total,
         'dateTime': timestamp.toIso8601String(),
         'products': cartProducts
-            .map((cp) => {
-                  'id': cp.id,
-                  'title': cp.title,
-                  'quantity': cp.quantity,
-                  'price': cp.price,
-                })
+            .map(
+              (cp) => {
+                'product': cp.id,
+                'productName': cp.title,
+                'quantity': cp.quantity,
+                'price': cp.price,
+                'discount': cp.discount,
+              },
+            )
             .toList(),
       }),
     );
