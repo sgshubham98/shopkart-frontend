@@ -97,21 +97,22 @@ class AuthProvider with ChangeNotifier {
       String lastName,
       String email,
       String mobile,
-      String password,
-      String confirmPassword,
-      String role) async {
+      String password) async {
     final url = Uri.http(api.BASE_URL, api.REGISTER);
     try {
       final response = await http.post(
         url,
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: json.encode({
           "firstName": firstName,
           "lastName": lastName,
           "email": email,
           "contact": mobile,
           "password": password,
-          "confirmPassword": confirmPassword,
-          "role": role,
+          "confirmPassword": password,
+          "role": "customer"
         }),
       );
       final responseData = json.decode(response.body);

@@ -24,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
     'contact': '',
     'password': '',
     'confirmPassword': '',
-    'role': ''
+    'role': 'customer'
   };
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -284,16 +284,12 @@ class _RegisterPageState extends State<RegisterPage> {
       _isSubmitting = true;
     });
     try {
-      _authData['confirmPassword'] = _authData['password'];
-      _authData['role'] = 'customer';
       await Provider.of<AuthProvider>(context, listen: false).signup(
         _authData['firstName'],
         _authData['lastName'],
         _authData['email'],
         _authData['contact'],
-        _authData['password'],
-        _authData['confirmPassword'],
-        _authData['role'],
+        _authData['password']
       ).timeout(const Duration(seconds: 30), onTimeout: _onTimeout);
       _redirectUser();
     } on HttpException catch (error) {

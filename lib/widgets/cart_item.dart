@@ -5,10 +5,10 @@ import 'package:shopkart_frontend/providers/cart_provider.dart';
 class CartItem extends StatelessWidget {
   final String id;
   final String productId;
-  final double price;
-  final int quantity;
+  final num price;
+  final num quantity;
   final String title;
-  final double discount;
+  final num discount;
   final String manufacturer;
 
   CartItem(

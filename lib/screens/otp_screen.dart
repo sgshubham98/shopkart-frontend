@@ -462,6 +462,9 @@ class _OtpScreenState extends State<OtpScreen>
   void _verifyOtp(String otp) async {
     http.Response response = await http.post(
       'https://shopkart-inc.herokuapp.com/api/users/verifyMobile/$mobile',
+      headers: {
+          "Content-Type": "application/json",
+        },
       body: {"otp": otp},
     );
     final responseData = json.decode(response.body);

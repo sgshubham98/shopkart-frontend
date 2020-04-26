@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart' show Cart;
+import 'package:shopkart_frontend/screens/order_status_screen.dart';
 import 'package:shopkart_frontend/widgets/cart_item.dart';
 import 'package:shopkart_frontend/providers/orders_provider.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -34,7 +33,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final cart = Provider.of<Cart>(context, listen: false);
-    final authData = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Cart'),
@@ -59,7 +57,9 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
           ),
-          SizedBox(width: 2.0,),
+          SizedBox(
+            width: 2.0,
+          ),
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -96,8 +96,8 @@ class _CartScreenState extends State<CartScreen> {
                   Spacer(),
                   Chip(
                     label: Text(
-                      'He',
-                      // '\$${cart.totalAmount.toStringAsFixed(2)}',
+                      // 'He',
+                      '\$${cart.totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -109,35 +109,35 @@ class _CartScreenState extends State<CartScreen> {
             ),
           ),
           SizedBox(height: 10),
-          // Expanded(
-          //   child: ListView.builder(
-          //     itemCount: cart.items.length,
-          //     //TODO: implemen this according to need
-          //     itemBuilder: (ctx, i) => CartItem(
-          //       cart.items.values.toList()[i].id,
-          //       cart.items.keys.toList()[i],
-          //       cart.items.values.toList()[i].price,
-          //       cart.items.values.toList()[i].quantity,
-          //       cart.items.values.toList()[i].title,
-          //       cart.items.values.toList()[i].discount,
-          //       cart.items.values.toList()[i].manufacturer,
-          //     ),
-          //   ),
-          // ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: cart.items.length,
+              //TODO: implemen this according to need
+              itemBuilder: (ctx, i) => CartItem(
+                cart.items.values.toList()[i].id,
+                cart.items.keys.toList()[i],
+                cart.items.values.toList()[i].price,
+                cart.items.values.toList()[i].quantity,
+                cart.items.values.toList()[i].title,
+                cart.items.values.toList()[i].discount,
+                cart.items.values.toList()[i].manufacturer,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   void openCheckout(Cart cart) async {
-    double price = 5000.56 * 100;
+    double price = cart.totalAmount * 100;
     print(price);
 
     var options = {
       'key': 'rzp_test_1DP5mmOlF5G5ag',
-      'amount': 50000,
-      'name': 'Test Payment',
-      'description': 'This is a Text Payment',
+      'amount': price,
+      'name': 'Order Payment',
+      'description': 'This is the payment regarding your current order.',
       'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
       'external': {
         'wallets': ['paytm']
@@ -146,12 +146,6 @@ class _CartScreenState extends State<CartScreen> {
 
     try {
       _razorpay.open(options);
-      await Provider.of<Orders>(context, listen: false).addOrder(
-        cart.items.values.toList(),
-        cart.totalAmount,
-      );
-
-      cart.clearCart();
     } catch (e) {
       debugPrint(e);
     }
@@ -162,14 +156,25 @@ class _CartScreenState extends State<CartScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderStatus(),
+      ),
+    );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print(response.message);
-
     Fluttertoast.showToast(
         msg: "ERROR: " + response.code.toString() + " - " + response.message,
         timeInSecForIosWeb: 4);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderStatus(),
+      ),
+    );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -183,26 +188,15 @@ class _CartScreenState extends State<CartScreen> {
     try {
       ScanResult qrResult = await BarcodeScanner.scan();
       Map<String, dynamic> result = json.decode(qrResult.rawContent);
-      //TODO: implement according to the api and provider class
       setState(() {
-        cart.addItem(result['name'], result['price'], result['discount'], result[], result[]);
-        Scaffold.of(context).hideCurrentSnackBar();
-        Scaffold.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Added item to cart!',
-            ),
-            duration: Duration(seconds: 2),
-            action: SnackBarAction(
-              label: 'UNDO',
-              onPressed: () {
-                cart.removeSingleItem(result[]);
-              },
-            ),
-          ),
-        );
-        // print(result);
-        // print(qrResult.rawContent);
+        try {
+          cart.addItem(result['_id'], result['price'] * 1.0, result['name'],
+              result['discount'] * 1.0, result['manufacturer']);
+        } on Exception catch (error) {
+          Fluttertoast.showToast(
+              msg: "Scanned QR is invalid!", timeInSecForIosWeb: 2);
+          print(error);
+        }
       });
     } on PlatformException catch (ex) {
       if (ex.code == BarcodeScanner.cameraAccessDenied) {
@@ -218,7 +212,7 @@ class _CartScreenState extends State<CartScreen> {
     } on FormatException {
       setState(() {
         Fluttertoast.showToast(
-            msg: "You pressed the back button before scanning anything",
+            msg: "Either wrong Qr scanned or you pressed the back button before scanning anything",
             timeInSecForIosWeb: 2);
       });
     } catch (ex) {
