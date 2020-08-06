@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+/screenshots/
 
 # IntelliJ related
 *.iml
@@ -29,9 +30,11 @@
 .pub-cache/
 .pub/
 /build/
+/test/
 
 # Web related
 lib/generated_plugin_registrant.dart
+/web/
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages

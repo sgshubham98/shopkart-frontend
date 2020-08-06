@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Product {
+class Product with ChangeNotifier {
   String id;
   String name;
   String category;
@@ -10,26 +10,14 @@ class Product {
   String expiryDate;
   String manufacturingDate;
 
-  Product(
-      {@required this.id,
-      @required this.name,
-      this.category,
-      @required this.price,
-      @required this.discount,
-      @required this.manufacturer,
-      this.expiryDate,
-      this.manufacturingDate});
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['_id'],
-      name: json['name'],
-      price: json['price'],
-      discount: json['discount'],
-      manufacturer: json['manufacturer'],
-      category: json['category'],
-      expiryDate: json['expirationDate'],
-      manufacturingDate: json['manufacturingDate']
-    );
-  }
+  Product({
+    @required this.id,
+    @required this.name,
+    this.category,
+    this.expiryDate,
+    @required this.price,
+    @required this.manufacturer,
+    this.manufacturingDate,
+    @required this.discount
+  });
 }

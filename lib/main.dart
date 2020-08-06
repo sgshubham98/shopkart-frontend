@@ -1,55 +1,77 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux_logging/redux_logging.dart';
-import 'package:shopkart_frontend/models/app_state.dart';
-import 'package:shopkart_frontend/redux/actions.dart';
-import 'package:shopkart_frontend/redux/reducers.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:shopkart_frontend/providers/auth_providers.dart';
+import 'package:shopkart_frontend/providers/cart_provider.dart';
+import 'package:shopkart_frontend/providers/orders_provider.dart';
+import 'package:shopkart_frontend/providers/products_provider.dart';
 import 'package:shopkart_frontend/screens/cart_screen.dart';
+import 'package:shopkart_frontend/screens/loading_screen.dart';
+import 'package:shopkart_frontend/screens/order_status_screen.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/screens/profile_screen.dart';
-import 'package:shopkart_frontend/screens/qr_screen.dart';
 import 'package:shopkart_frontend/screens/register_screen.dart';
 import 'package:shopkart_frontend/screens/splash_screen.dart';
 import 'package:shopkart_frontend/screens/home_page.dart';
 import 'package:shopkart_frontend/screens/intro_screen.dart';
 import 'package:shopkart_frontend/screens/login_screen.dart';
-import 'package:redux/redux.dart';
-import 'package:redux_thunk/redux_thunk.dart';
 
 void main() {
-  final store = Store<AppState>(appReducer,
-      initialState: AppState.initial(), middleware: [thunkMiddleware, LoggingMiddleware.printer()]);
-  runApp(MyApp(store: store));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Store<AppState> store;
-  MyApp({this.store});
-
   @override
   Widget build(BuildContext context) {
-    return StoreProvider(
-      store: store,
-      child: MaterialApp(
-        title: "ShopKart",
-        theme: ThemeData.light(),
-        initialRoute: '/SplashScreen',
-        routes: <String, WidgetBuilder>{
-          '/HomePage': (BuildContext context) => HomePage(
-            onInit: (){
-              StoreProvider.of<AppState>(context).dispatch(getUserAction);
-              StoreProvider.of<AppState>(context).dispatch(getProductsAction);
-            },
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+      ),
+    );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProxyProvider<AuthProvider, Products>(
+          builder: (context, auth, previousProducts) => Products(
+            auth.token,
+            auth.userId,
+            previousProducts == null ? [] : previousProducts.products,
           ),
-          '/SplashScreen': (BuildContext context) => SplashScreen(),
-          '/IntroScreen': (BuildContext context) => IntroScreen(),
-          '/LoginScreen': (BuildContext context) => LoginPage(),
-          '/RegisterScreen': (BuildContext context) => RegisterPage(),
-          '/OtpScreen': (BuildContext context) => OtpScreen(),
-          '/ProfileScreen': (BuildContext context) => ProfileScreen(),
-          '/QRScreen': (BuildContext context) => QRScreen(),
-          '/CartScreen': (BuildContext context) => CartScreen(),
-        },
+        ),
+        ChangeNotifierProxyProvider<AuthProvider, Orders>(
+          builder: (ctx, auth, previousOrders) => Orders(
+                auth.token,
+                previousOrders == null ? [] : previousOrders.orders,
+              ),
+        ),
+      ],
+      child: Consumer<AuthProvider>(
+        builder: (context, auth, _) => MaterialApp(
+          title: "ShopKart",
+          theme: ThemeData.light(),
+          home: SafeArea(
+            child: auth.isAuth
+                ? HomePage()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (context, authResult) =>
+                        authResult.connectionState == ConnectionState.waiting
+                            ? SplashScreen()
+                            : IntroScreen(),
+                  ),
+          ),
+          routes: <String, WidgetBuilder>{
+            // '/LoadingScreen': (BuildContext context) => LoadingScreen(),
+            '/IntroScreen': (BuildContext context) => IntroScreen(),
+            '/LoginScreen': (BuildContext context) => LoginPage(),
+            '/RegisterScreen': (BuildContext context) => RegisterPage(),
+            '/OtpScreen': (BuildContext context) => OtpScreen(),
+            '/HomePage': (BuildContext context) => HomePage(),
+            '/ProfileScreen': (BuildContext context) => ProfileScreen(),
+            '/CartScreen': (BuildContext context) => CartScreen(),
+          },
+        ),
       ),
     );
   }
