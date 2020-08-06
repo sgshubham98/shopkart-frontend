@@ -38,7 +38,7 @@ class AuthProvider with ChangeNotifier {
     if (isAuth) {
       return {
         "name": _name,
-        "phone": _phone,
+        "mobile": _phone,
         "email": _email,
         "qr": _userQr,
       };
@@ -141,7 +141,7 @@ class AuthProvider with ChangeNotifier {
     _userId = extractedUserData['userId'];
     _userQr = extractedUserData['qr'];
     _name = extractedUserData['name'];
-    _phone = extractedUserData['phone'];
+    _phone = extractedUserData['mobile'];
     _email = extractedUserData['email'];
     _expiryDate = expiryDate;
     notifyListeners();

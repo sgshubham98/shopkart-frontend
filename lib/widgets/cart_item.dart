@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:core';
 import 'package:shopkart_frontend/providers/cart_provider.dart';
+import 'package:shopkart_frontend/utilities/constants.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
@@ -68,25 +70,76 @@ class CartItem extends StatelessWidget {
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
-      child: Card(
-        margin: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 4,
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Padding(
-                padding: EdgeInsets.all(5),
-                child: FittedBox(
-                  child: Text('\u20b9$price'),
-                ),
+      child: GestureDetector(
+        onLongPress: () {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(title),
+              content: Text(
+                'Price: $price\nManufacturer: $manufacturer\nDiscount: $discount',
               ),
+              scrollable: true,
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  },
+                ),
+              ],
             ),
-            title: Text(title),
-            subtitle: Text('Mfg: \u20b9${(price * quantity)}'),
-            trailing: Text('$quantity x'),
+          );
+        },
+        child: Card(
+          margin: EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 4,
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: FittedBox(
+                      child: Text('\u20b9$price'),
+                    ),
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Text(title),
+                    Text('Total: \u20b9${(price * quantity).toStringAsFixed(2)}'),
+                  ],
+                ),
+                Spacer(),
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      GestureDetector(
+                          child: Icon(Icons.add_circle),
+                          onTap: () {
+                            Provider.of<Cart>(context, listen: false).addItem(
+                                productId,
+                                price,
+                                title,
+                                discount,
+                                manufacturer);
+                          }),
+                      Text('$quantity x'),
+                      GestureDetector(
+                          child: Icon(Icons.remove_circle),
+                          onTap: () {
+                            Provider.of<Cart>(context, listen: false)
+                                .removeSingleItem(productId);
+                          }),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -14,7 +14,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   @override
   void initState() {
     super.initState();
@@ -33,15 +32,15 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           Consumer<Cart>(
             builder: (_, cart, ch) => Badge(
-                  child: ch,
-                  value: cart.itemCount.toString(),
-                ),
+              child: ch,
+              value: cart.itemCount.toString(),
+            ),
             child: IconButton(
               icon: Icon(
                 Icons.shopping_cart,
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('\CartScreen');
+                Navigator.of(context).pushNamed('/CartScreen');
               },
             ),
           ),
@@ -55,10 +54,20 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
+            Image.asset(
+              'assets/images/walk_cart.gif',
+              height: MediaQuery.of(context).size.height / 3,
+              width: double.infinity,
+            ),
+            SizedBox(
+              height: 16.0,
+            ),
             Image(
-              image: NetworkImage(authData.userProfile["qr"]),
-              height: MediaQuery.of(context).size.height / 4,
-              width: MediaQuery.of(context).size.height / 4,
+              image: NetworkImage(authData.userProfile["qr"] == null
+                  ? ''
+                  : authData.userProfile["qr"]),
+              height: MediaQuery.of(context).size.height / 3,
+              width: MediaQuery.of(context).size.height / 3,
             ),
             SizedBox(
               height: 16.0,

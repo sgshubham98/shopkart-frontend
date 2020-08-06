@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/providers/auth_providers.dart';
+import 'package:shopkart_frontend/providers/cart_provider.dart';
+import 'package:shopkart_frontend/screens/order_screen.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/app_drawer.dart';
+import 'package:shopkart_frontend/widgets/badge.dart';
 import 'package:shopkart_frontend/widgets/shopkart_logo_appbar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -30,6 +33,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
           tag: 'logo',
           child: ShopkartLogoAppBar(),
         ),
+        actions: <Widget>[
+          Consumer<Cart>(
+            builder: (_, cart, ch) => Badge(
+              child: ch,
+              value: cart.itemCount.toString(),
+            ),
+            child: IconButton(
+              icon: Icon(
+                Icons.shopping_cart,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed('/CartScreen');
+              },
+            ),
+          ),
+        ],
         elevation: 0,
         backgroundColor: Colors.white,
       ),
@@ -62,7 +81,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
                         child: Text(
-                          authData.userProfile['name'],
+                          authData.userProfile['name'] == null
+                              ? ''
+                              : authData.userProfile['name'],
                           style: TextStyle(
                             fontSize: 18.0,
                             color: Color(0xFF2D3E50),
@@ -75,7 +96,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          authData.userProfile['email'],
+                          authData.userProfile['email'] == null
+                              ? ''
+                              : authData.userProfile['email'],
                           style: TextStyle(
                             fontSize: 16.0,
                             color: kPrimaryColor,
@@ -87,7 +110,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
-                          authData.userProfile['phone'],
+                          authData.userProfile['mobile'] == null
+                              ? ''
+                              : authData.userProfile['mobile'],
                           style: TextStyle(
                             fontSize: 16.0,
                             color: kPrimaryColor,
@@ -102,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.4,
               child: Column(
                 children: <Widget>[
                   Padding(
@@ -120,7 +145,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: ProfileBars(
                       icon: FontAwesomeIcons.shoppingCart,
                       text: 'View Orders',
-                      onTap: null,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrdersScreen(),
+                        ),
+                      ),
                     ),
                   ),
                   Padding(
@@ -130,7 +160,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: FontAwesomeIcons.signOutAlt,
                       text: 'Logout',
                       onTap: () {
-                        Navigator.pushReplacementNamed(context, '/LoginScreen');
+                        Provider.of<AuthProvider>(context, listen: false)
+                            .logout();
                       },
                     ),
                   ),
