@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart';
+import 'package:shopkart_frontend/providers/shop_status_provider.dart';
 import 'package:shopkart_frontend/screens/order_screen.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/app_drawer.dart';
@@ -44,7 +46,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Icons.shopping_cart,
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed('/CartScreen');
+                Provider.of<ShopStatus>(context).status == true
+                            ? Navigator.pushNamed(context, '/CartScreen')
+                            : Fluttertoast.showToast(
+                                msg: 'Please scan your QR to enter shop');
+                // Navigator.of(context).pushNamed('/CartScreen');
               },
             ),
           ),
@@ -75,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         minRadius: 24.0,
                         maxRadius: 44.0,
                         backgroundImage: AssetImage(
-                          'assets/images/shop2.jpg',
+                          'assets/images/profile.png',
                         ),
                       ),
                       Padding(
@@ -134,15 +140,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(
                         top: 16.0, left: 16.0, right: 16.0),
                     child: ProfileBars(
-                      icon: Icons.lock,
-                      text: 'Change Password',
-                      onTap: null,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 16.0, left: 16.0, right: 16.0),
-                    child: ProfileBars(
                       icon: FontAwesomeIcons.shoppingCart,
                       text: 'View Orders',
                       onTap: () => Navigator.push(
@@ -160,6 +157,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: FontAwesomeIcons.signOutAlt,
                       text: 'Logout',
                       onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacementNamed('/');
                         Provider.of<AuthProvider>(context, listen: false)
                             .logout();
                       },

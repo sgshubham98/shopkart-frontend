@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart' show Cart;
+import 'package:shopkart_frontend/screens/loading_screen.dart';
 import 'package:shopkart_frontend/screens/order_status_screen.dart';
 import 'package:shopkart_frontend/widgets/cart_item.dart';
 import 'package:shopkart_frontend/utilities/constants.dart';
@@ -37,9 +38,22 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: kPrimaryColor),
         // textTheme: TextTheme(),
+        centerTitle: true,
         backgroundColor: Colors.white,
-        title: Text('Your Cart', style: TextStyle(color: kPrimaryColor,),
-      ),
+        title: Text(
+          'Your Cart',
+          style: TextStyle(
+            color: kPrimaryColor,
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () {
+              Provider.of<Cart>(context, listen: false).clearCart();
+            },
+            child: Text('Clear Cart'),
+          ),
+        ],
         elevation: 0.0,
       ),
       backgroundColor: Colors.white,
@@ -75,7 +89,12 @@ class _CartScreenState extends State<CartScreen> {
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
-              onTap: () => openCheckout(cart),
+              onTap: () => cart.totalAmount > 1
+                  ? openCheckout(cart)
+                  : Fluttertoast.showToast(
+                      msg: "Alert: Cart total amount should be atleast RS.1",
+                      timeInSecForIosWeb: 4,
+                    ),
               child: Container(
                 height: 50,
                 color: kSecondaryColor,
@@ -110,13 +129,16 @@ class _CartScreenState extends State<CartScreen> {
                 children: <Widget>[
                   Text(
                     'Total',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
                   ),
                   Spacer(),
                   Chip(
                     label: Text(
                       // 'He',
-                      '\u20b9${cart.totalAmount.toStringAsFixed(2)}',
+                      '\u20b9${Provider.of<Cart>(context).totalAmount.toStringAsFixed(2)}',
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -174,10 +196,15 @@ class _CartScreenState extends State<CartScreen> {
 
     Fluttertoast.showToast(
         msg: "SUCCESS: " + response.paymentId, timeInSecForIosWeb: 4);
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName('/'),
+    );
+    // LoadingScreen();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => OrderStatus(),
+        builder: (context) => OrderStatus(true),
       ),
     );
   }
@@ -187,10 +214,14 @@ class _CartScreenState extends State<CartScreen> {
     Fluttertoast.showToast(
         msg: "ERROR: " + response.code.toString() + " - " + response.message,
         timeInSecForIosWeb: 4);
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName('/'),
+    );
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => OrderStatus(),
+        builder: (context) => OrderStatus(false),
       ),
     );
   }

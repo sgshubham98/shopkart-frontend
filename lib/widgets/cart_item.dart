@@ -108,33 +108,37 @@ class CartItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                Column(
-                  children: <Widget>[
-                    Text(title),
-                    Text('Total: \u20b9${(price * quantity).toStringAsFixed(2)}'),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(title),
+                      Text(
+                          'Total: \u20b9${(price * Provider.of<Cart>(context).itemQuantity(productId)).toStringAsFixed(2)}'),
+                    ],
+                  ),
                 ),
                 Spacer(),
                 Expanded(
                   child: Row(
                     children: <Widget>[
                       GestureDetector(
-                          child: Icon(Icons.add_circle),
-                          onTap: () {
-                            Provider.of<Cart>(context, listen: false).addItem(
-                                productId,
-                                price,
-                                title,
-                                discount,
-                                manufacturer);
-                          }),
-                      Text('$quantity x'),
+                        child: Icon(Icons.remove_circle),
+                        onTap: () {
+                          Provider.of<Cart>(context, listen: false)
+                              .removeSingleItem(productId);
+                        },
+                      ),
+                      Text(
+                          '${Provider.of<Cart>(context).itemQuantity(productId)} x'),
                       GestureDetector(
-                          child: Icon(Icons.remove_circle),
-                          onTap: () {
-                            Provider.of<Cart>(context, listen: false)
-                                .removeSingleItem(productId);
-                          }),
+                        child: Icon(Icons.add_circle),
+                        onTap: () {
+                          Provider.of<Cart>(context).addItem(
+                              productId, price, title, discount, manufacturer);
+                        },
+                      ),
                     ],
                   ),
                 ),

@@ -23,6 +23,10 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.person),
             title: Text('Home'),
             onTap: () {
+              Navigator.popUntil(
+                context,
+                ModalRoute.withName('/'),
+              );
               Navigator.of(context).pushNamed('/HomePage');
             },
           ),
@@ -61,7 +65,11 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(FontAwesomeIcons.infoCircle),
             title: Text('About'),
             onTap: () {
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AboutScreen(),));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AboutScreen(),
+                  ));
             },
           ),
           Divider(),

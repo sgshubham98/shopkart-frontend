@@ -4,6 +4,7 @@ import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart';
 import 'package:shopkart_frontend/providers/orders_provider.dart';
 import 'package:shopkart_frontend/providers/products_provider.dart';
+import 'package:shopkart_frontend/providers/shop_status_provider.dart';
 import 'package:shopkart_frontend/screens/cart_screen.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/screens/profile_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProvider.value(value: ShopStatus()),
         ChangeNotifierProxyProvider<AuthProvider, Products>(
           builder: (context, auth, previousProducts) => Products(
             auth.token,
@@ -33,9 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<AuthProvider, Orders>(
           builder: (ctx, auth, previousOrders) => Orders(
-                auth.token,
-                previousOrders == null ? [] : previousOrders.orders,
-              ),
+            auth.token,
+            previousOrders == null ? [] : previousOrders.orders,
+          ),
         ),
       ],
       child: Consumer<AuthProvider>(
