@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/providers/auth_providers.dart';
 import 'package:shopkart_frontend/providers/cart_provider.dart';
 import 'package:shopkart_frontend/providers/orders_provider.dart';
 import 'package:shopkart_frontend/providers/products_provider.dart';
+import 'package:shopkart_frontend/providers/shop_status_provider.dart';
 import 'package:shopkart_frontend/screens/cart_screen.dart';
-import 'package:shopkart_frontend/screens/loading_screen.dart';
-import 'package:shopkart_frontend/screens/order_status_screen.dart';
 import 'package:shopkart_frontend/screens/otp_screen.dart';
 import 'package:shopkart_frontend/screens/profile_screen.dart';
 import 'package:shopkart_frontend/screens/register_screen.dart';
@@ -23,15 +21,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-      ),
-    );
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider.value(value: Cart()),
+        ChangeNotifierProvider.value(value: ShopStatus()),
         ChangeNotifierProxyProvider<AuthProvider, Products>(
           builder: (context, auth, previousProducts) => Products(
             auth.token,
@@ -41,9 +35,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProxyProvider<AuthProvider, Orders>(
           builder: (ctx, auth, previousOrders) => Orders(
-                auth.token,
-                previousOrders == null ? [] : previousOrders.orders,
-              ),
+            auth.token,
+            previousOrders == null ? [] : previousOrders.orders,
+          ),
         ),
       ],
       child: Consumer<AuthProvider>(
@@ -62,7 +56,6 @@ class MyApp extends StatelessWidget {
                   ),
           ),
           routes: <String, WidgetBuilder>{
-            // '/LoadingScreen': (BuildContext context) => LoadingScreen(),
             '/IntroScreen': (BuildContext context) => IntroScreen(),
             '/LoginScreen': (BuildContext context) => LoginPage(),
             '/RegisterScreen': (BuildContext context) => RegisterPage(),

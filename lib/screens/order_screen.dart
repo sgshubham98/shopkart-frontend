@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopkart_frontend/providers/orders_provider.dart' show Orders;
+import 'package:shopkart_frontend/utilities/constants.dart';
 import 'package:shopkart_frontend/widgets/order_item.dart';
 import 'package:shopkart_frontend/widgets/app_drawer.dart';
 
@@ -10,8 +11,13 @@ class OrdersScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Your Orders'),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: kPrimaryColor,
+        ),
+        title: Text('Your Orders', style: TextStyle(color: kPrimaryColor),),
       ),
       drawer: AppDrawer(),
       body: FutureBuilder(
@@ -21,9 +27,8 @@ class OrdersScreen extends StatelessWidget {
             return Center(child: CircularProgressIndicator());
           } else {
             if (dataSnapshot.error != null) {
-              //TODO: Do error handling stuff
               return Center(
-                child: Text('An error occurred!'),
+                child: Expanded(child: Image.asset('assets/images/no_orders.png')),
               );
             } else {
               return Consumer<Orders>(

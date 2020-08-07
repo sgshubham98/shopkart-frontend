@@ -29,6 +29,13 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  int itemQuantity(var productId) {
+    if (_items.containsKey(productId)) {
+      return _items[productId].quantity;
+    }
+    return null;
+  }
+
   double get totalAmount {
     var total = 0.0;
     _items.forEach((key, cartItem) {

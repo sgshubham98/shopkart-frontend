@@ -38,29 +38,29 @@ class Orders with ChangeNotifier {
       },
     );
     final List<OrderItem> loadedOrders = [];
-    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    final extractedData = json.decode(response.body)['products'] as List<dynamic>;
     if (extractedData == null) {
       return;
     }
-    extractedData.forEach((orderId, orderData) {
+    for(int i=0; i<extractedData.length; i++){
       loadedOrders.add(
         OrderItem(
-          id: orderId,
-          amount: orderData['amount'],
-          dateTime: DateTime.parse(orderData['dateTime']),
-          products: (orderData['products'] as List<dynamic>)
+          id: extractedData[i]['_id'],
+          amount: extractedData[i]['amount'],
+          dateTime: DateTime.parse(extractedData[i]['dateTime']),
+          products: (extractedData[i]['products'] as List<dynamic>)
               .map(
                 (item) => CartItem(
-                  id: item['id'],
+                  id: item['product'],
                   price: item['price'],
                   quantity: item['quantity'],
-                  title: item['title'],
+                  title: item['productName'],
                 ),
               )
               .toList(),
         ),
       );
-    });
+    }
     _orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
@@ -71,7 +71,6 @@ class Orders with ChangeNotifier {
     var orderPost = json.encode({
       'amount': total,
       'dateTime': timestamp.toIso8601String(),
-      // 'dateTime': timestamp,
       'products': cartProducts
           .map(
             (cp) => {
