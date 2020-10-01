@@ -1,16 +1,52 @@
-# Shopkart
+# Welcome to Shopkart!
 
-A new Flutter project.
+[![N|Solid](https://image.flaticon.com/icons/svg/66/66580.svg)](https://shopkart-inc.herokuapp.com) **No Calculations, No Queues**
 
-## Getting Started
+> **Shopkart is simple to use android application that integrates your online and offline shopping experience, making your shopping lifestyle better.**
 
-This project is a starting point for a Flutter application.
+## Userful Links
+> Download Shopkart APK [here](apk/app-release.apk) <br>
+> Link to Backend [here](https://github.com/ritwickbhargav80/Final-year-project).
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Highlight on Shopkart
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+> **Customer is supposed to be shopping, and not calculating on discounts. Why should customer care about the calculations of discounts and budgets, when they can have shopkart.**
+
+**With Shopkart, our soul motive is to pivot customer mind from calculations to best and latest deals.**
+
+In present scenario, we have long queues in shopping marts on holidays, weekends, and on time of heavy sale.  
+
+> With Shopkart, The days of standing in long queues are over, shopkart calculates for its customers and manages their budgets before actual payment during shopping. Payment can be done online and hence avoiding queues. Thus, no lines, no checkouts.
+
+Even, we allow user to enter the shopping mart by scanning the unique QR code generated at the time of login into their app. This QR is unique for each and every user.  
+
+With this, we can track user shopping details, and user cannot go outside the shopping mart, unless he is done with the payment or his cart is empty.
+
+> Once, the user is in the mart, he can scan the QR to any product with his/her app, and application will show all the relevant details of the product, including, its MRP, Discount, Discounted Price, Discount Value, Features, Name.
+
+If user feals to add that particular product to cart he can add it in the cart, and then he can continue shopping or directly go to cart for checkout.
+
+Cart screen will show all the products added to cart, with overall total price, overall discount, and overall final price.
+
+> On checkout user can choose to pay online or offline at the cash counter.  
+
+Once the shopping is done, checkout have been made, user will receive an auto-generated email from shopkart, that will cover his/her Invoice.
+
+We are recording every shopping checkouts, thus to provide sales report, with minimum efforts.
+
+On festive days, when mart have heavy discounts on products, admin can mail all the users about the latest deals, via his admin panel.
+
+With shopping track, admin panel, will notify admin about the products with zero quantity, so that more quantities can be bought to mart on time.
+
+> **We can integrate shopkart easily in shopping marts like Easydays, Super-Market, Big Baazar, Vishal Mega Marts, just to enhance user experience a way better than ever.**
+
+## Developers
+
+> **[Shubham Goswami](https://github.com/sgshubham98)** **Mobile App Developer**
+
+> **[Aakash Goel](https://github.com/goelaakash79)** **Frontend Developer**
+
+> **[Shreeyanshi Gupta](https://github.com/shrynshigupta06)** **Backend Developer**
+
+> **[Ritwick Bhargav](https://github.com/ritwickbhargav80)** **Backend Developer**
